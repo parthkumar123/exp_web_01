@@ -41,7 +41,9 @@ export default function CustomCursor() {
     return () => {
       document.body.style.cursor = "";
       // Safely remove style element if it exists
-      const existingStyle = document.querySelector('[data-custom-cursor="true"]');
+      const existingStyle = document.querySelector(
+        '[data-custom-cursor="true"]'
+      );
       if (existingStyle && existingStyle.parentNode) {
         existingStyle.parentNode.removeChild(existingStyle);
       }
