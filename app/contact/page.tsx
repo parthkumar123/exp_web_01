@@ -77,9 +77,9 @@ export default function ContactPage() {
                 </div>
                 <h3 className="text-xl font-light text-white mb-4">Visit Us</h3>
                 <p className="text-white/60 leading-relaxed font-light">
-                  Plot No. 123, Industrial Area,
+                  Plot No. J-7832, GIDC Ind. Estate, Ankleshwar,
                   <br />
-                  Gujarat, India - 380001
+                  Gujarat, India - 393002
                 </p>
               </div>
 
@@ -102,18 +102,10 @@ export default function ContactPage() {
                 <div className="space-y-2 text-white/60 font-light">
                   <p>
                     <a
-                      href="tel:+919876543210"
+                      href="tel:+916354914468"
                       className="hover:text-emerald-400 transition-colors"
                     >
-                      +91 98765 43210
-                    </a>
-                  </p>
-                  <p>
-                    <a
-                      href="tel:+919876543211"
-                      className="hover:text-emerald-400 transition-colors"
-                    >
-                      +91 98765 43211
+                      +91 63549 14468
                     </a>
                   </p>
                 </div>
@@ -138,18 +130,10 @@ export default function ContactPage() {
                 <div className="space-y-2 text-white/60 font-light">
                   <p>
                     <a
-                      href="mailto:info@sensoagrotech.com"
+                      href="mailto:sensoagrotech2909@gmail.com"
                       className="hover:text-emerald-400 transition-colors"
                     >
-                      info@sensoagrotech.com
-                    </a>
-                  </p>
-                  <p>
-                    <a
-                      href="mailto:sales@sensoagrotech.com"
-                      className="hover:text-emerald-400 transition-colors"
-                    >
-                      sales@sensoagrotech.com
+                      sensoagrotech2909@gmail.com
                     </a>
                   </p>
                 </div>

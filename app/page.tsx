@@ -1,7 +1,6 @@
 "use client";
 
 import VideoBackground from "@/components/VideoBackground";
-import CustomCursor from "@/components/CustomCursor";
 import { DayNightToggle, DayNightProvider } from "@/components/DayNightToggle";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
@@ -13,8 +12,7 @@ export default function Home() {
         {/* Navigation */}
         <Navigation />
 
-        {/* Custom cursor light carving */}
-        <CustomCursor />
+        {/* Custom cursor removed */}
 
         {/* Video Background Layer - Fixed */}
         <VideoBackground />
@@ -146,6 +144,17 @@ export default function Home() {
                 </div>
                 <div className="px-4 py-2 backdrop-blur-xl bg-white/5 border border-white/10 rounded-lg">
                   <span className="text-sm text-white/80">Herbicides</span>
+                </div>
+                <div className="px-4 py-2 backdrop-blur-xl bg-white/5 border border-white/10 rounded-lg">
+                  <span className="text-sm text-white/80">
+                    Plant Growth Promoter
+                  </span>
+                </div>
+                <div className="px-4 py-2 backdrop-blur-xl bg-white/5 border border-white/10 rounded-lg">
+                  <span className="text-sm text-white/80">Biologicals</span>
+                </div>
+                <div className="px-4 py-2 backdrop-blur-xl bg-white/5 border border-white/10 rounded-lg">
+                  <span className="text-sm text-white/80">Fertilizers</span>
                 </div>
               </div>
             </div>
@@ -387,7 +396,7 @@ export default function Home() {
                 {/* Stat 1 */}
                 <div className="backdrop-blur-2xl bg-gradient-to-br from-emerald-500/10 to-white/5 border border-white/10 rounded-3xl p-8 text-center hover:border-emerald-500/30 transition-all duration-500">
                   <div className="text-6xl md:text-7xl font-extralight text-emerald-400 mb-3">
-                    50+
+                    110+
                   </div>
                   <div className="text-sm text-white/70 uppercase tracking-wider">
                     Products
@@ -413,7 +422,7 @@ export default function Home() {
                 {/* Stat 3 */}
                 <div className="backdrop-blur-2xl bg-gradient-to-br from-emerald-500/10 to-white/5 border border-white/10 rounded-3xl p-8 text-center hover:border-emerald-500/30 transition-all duration-500">
                   <div className="text-6xl md:text-7xl font-extralight text-emerald-400 mb-3">
-                    10K+
+                    15K+
                   </div>
                   <div className="text-sm text-white/70 uppercase tracking-wider">
                     Happy Farmers

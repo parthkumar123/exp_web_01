@@ -25,14 +25,14 @@ export const companyInfo = {
       full: "Plot No. 123, Industrial Area, Gujarat, India - 380001",
     },
     phone: "+91 98765 43210",
-    email: "info@sensoagrotech.com",
+    email: "sensoagrotech2909@gmail.com",
   },
 
   // Company Stats
   stats: {
-    products: "50+",
+    products: "110+",
     experience: "10+",
-    farmers: "10K+",
+    farmers: "15K+",
     growthRate: "+35% YoY",
     customerSatisfaction: "98%",
     productQuality: "99%",
