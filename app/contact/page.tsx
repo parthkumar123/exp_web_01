@@ -31,22 +31,22 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-emerald-950/20 to-zinc-950">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-emerald-900/30 to-zinc-900">
       <Navigation />
 
       {/* Hero Section */}
       <section className="pt-32 pb-16 relative">
-        <div className="absolute inset-0 bg-gradient-radial from-emerald-500/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-radial from-emerald-500/20 via-transparent to-transparent" />
         <div className="max-w-7xl mx-auto px-8 text-center relative z-10">
-          <div className="inline-block px-6 py-2 mb-8 backdrop-blur-xl bg-white/5 border border-white/10 rounded-full">
-            <span className="text-sm font-medium text-white/70 tracking-[0.2em] uppercase">
+          <div className="inline-block px-6 py-2 mb-8 backdrop-blur-xl bg-emerald-500/20 border border-emerald-500/40 rounded-full">
+            <span className="text-sm font-medium text-emerald-300 tracking-[0.2em] uppercase">
               Contact Us
             </span>
           </div>
           <h1 className="text-6xl md:text-7xl font-extralight text-white mb-6 tracking-tight">
             Get in Touch
           </h1>
-          <p className="text-xl text-white/60 max-w-3xl mx-auto font-light">
+          <p className="text-xl text-white/80 max-w-3xl mx-auto font-light">
             Get in touch with us for any inquiries about our products or
             services
           </p>
@@ -60,7 +60,7 @@ export default function ContactPage() {
             {/* Contact Info Cards */}
             <div className="space-y-6">
               {/* Visit Us */}
-              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-2xl p-8 hover:border-emerald-500/30 transition-all">
+              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all">
                 <div className="w-14 h-14 bg-gradient-to-br from-emerald-600/20 to-emerald-800/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6">
                   <svg
                     className="w-7 h-7 text-emerald-400"
@@ -76,15 +76,15 @@ export default function ContactPage() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-light text-white mb-4">Visit Us</h3>
-                <p className="text-white/60 leading-relaxed font-light">
+                <p className="text-white/75 leading-relaxed font-light">
                   Plot No. J-7832, GIDC Ind. Estate, Ankleshwar,
                   <br />
-                  Gujarat, India - 393002
+                  Gujarat, India - 380001
                 </p>
               </div>
 
               {/* Call Us */}
-              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-2xl p-8 hover:border-emerald-500/30 transition-all">
+              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all">
                 <div className="w-14 h-14 bg-gradient-to-br from-amber-600/20 to-amber-800/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6">
                   <svg
                     className="w-7 h-7 text-amber-400"
@@ -112,7 +112,7 @@ export default function ContactPage() {
               </div>
 
               {/* Email Us */}
-              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-2xl p-8 hover:border-emerald-500/30 transition-all">
+              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all">
                 <div className="w-14 h-14 bg-gradient-to-br from-blue-600/20 to-blue-800/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6">
                   <svg
                     className="w-7 h-7 text-blue-400"
@@ -127,7 +127,7 @@ export default function ContactPage() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-light text-white mb-4">Email Us</h3>
-                <div className="space-y-2 text-white/60 font-light">
+                <div className="space-y-2 text-white/75 font-light">
                   <p>
                     <a
                       href="mailto:sensoagrotech2909@gmail.com"
@@ -140,7 +140,7 @@ export default function ContactPage() {
               </div>
 
               {/* Business Hours */}
-              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-2xl p-8 hover:border-emerald-500/30 transition-all">
+              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all">
                 <div className="w-14 h-14 bg-gradient-to-br from-emerald-700/20 to-emerald-900/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6">
                   <svg
                     className="w-7 h-7 text-emerald-400"
@@ -157,7 +157,7 @@ export default function ContactPage() {
                 <h3 className="text-xl font-light text-white mb-4">
                   Business Hours
                 </h3>
-                <div className="space-y-2 text-white/60 font-light">
+                <div className="space-y-2 text-white/75 font-light">
                   <p>Monday - Saturday</p>
                   <p className="font-normal text-white/80">9:00 AM - 6:00 PM</p>
                   <p className="text-red-400 font-normal">Sunday: Closed</p>
@@ -167,7 +167,7 @@ export default function ContactPage() {
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl p-8 md:p-12">
+              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-3xl p-8 md:p-12 hover:border-emerald-400/50 transition-all">
                 <h2 className="text-4xl font-extralight text-white mb-8 tracking-tight">
                   Send us a Message
                 </h2>
@@ -324,11 +324,16 @@ export default function ContactPage() {
                   Google Maps Integration
                 </h3>
                 <p className="text-white/60 mb-6 font-light">
-                  Plot No. 123, Industrial Area, Gujarat, India - 380001
+                  Plot No. J-7832, GIDC Ind. Estate Ankleshwar, Gujarat 393002
                 </p>
-                <button className="px-8 py-3 bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 text-emerald-300 font-medium rounded-lg hover:bg-emerald-500/30 transition-colors duration-300">
+                <a
+                  href="https://maps.app.goo.gl/nyyQ5grTsXvgb4bT7?g_st=aw"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-8 py-3 bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 text-emerald-300 font-medium rounded-lg hover:bg-emerald-500/30 transition-colors duration-300"
+                >
                   Get Directions
-                </button>
+                </a>
               </div>
             </div>
           </div>

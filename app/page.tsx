@@ -546,38 +546,32 @@ export default function Home() {
 
               {/* Products Grid */}
               <div className="grid md:grid-cols-3 gap-8">
-                {/* Product 1: FungiGuard Elite */}
+                {/* Product 1: Insecticide */}
                 <div className="group backdrop-blur-2xl bg-gradient-to-br from-emerald-500/5 to-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
                   <div className="h-48 bg-gradient-to-br from-emerald-600/20 to-emerald-800/20 flex items-center justify-center relative overflow-hidden">
                     <div className="absolute top-4 right-4 px-3 py-1 bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-full">
                       <span className="text-xs text-emerald-300 font-medium">
-                        Fungicide
+                        Insecticide
                       </span>
                     </div>
-                    <svg
-                      className="w-20 h-20 text-emerald-400/50"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
+                    <img
+                      src="/insectiside.png"
+                      alt="Insecticide"
+                      className="w-full h-full object-contain p-6"
+                    />
                   </div>
                   <div className="p-6">
                     <h3 className="text-2xl font-light text-white mb-2">
-                      FungiGuard Elite
+                      Dhanush
                     </h3>
                     <p className="text-sm text-white/60 leading-relaxed">
-                      Systemic fungicide for comprehensive disease management in
-                      all crops.
+                      Advanced insecticide for effective pest control and crop
+                      protection.
                     </p>
                   </div>
                 </div>
 
-                {/* Product 2: WeedFree Max */}
+                {/* Product 2: Herbicide */}
                 <div className="group backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
                   <div className="h-48 bg-gradient-to-br from-amber-600/20 to-amber-800/20 flex items-center justify-center relative overflow-hidden">
                     <div className="absolute top-4 right-4 px-3 py-1 bg-amber-500/20 backdrop-blur-xl border border-amber-500/30 rounded-full">
@@ -585,21 +579,15 @@ export default function Home() {
                         Herbicide
                       </span>
                     </div>
-                    <svg
-                      className="w-20 h-20 text-amber-400/50"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
+                    <img
+                      src="/harbiside.png"
+                      alt="Herbicide"
+                      className="w-full h-full object-contain p-6"
+                    />
                   </div>
                   <div className="p-6">
                     <h3 className="text-2xl font-light text-white mb-2">
-                      WeedFree Max
+                      Glocell
                     </h3>
                     <p className="text-sm text-white/60 leading-relaxed">
                       Selective herbicide with pre and post-emergence activity
@@ -608,7 +596,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Product 3: GrowthPlus */}
+                {/* Product 3: Plant Growth Promoter */}
                 <div className="group backdrop-blur-2xl bg-gradient-to-br from-emerald-500/5 to-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
                   <div className="h-48 bg-gradient-to-br from-green-600/20 to-green-800/20 flex items-center justify-center relative overflow-hidden">
                     <div className="absolute top-4 right-4 px-3 py-1 bg-green-500/20 backdrop-blur-xl border border-green-500/30 rounded-full">
@@ -616,25 +604,94 @@ export default function Home() {
                         Plant Growth Regulator
                       </span>
                     </div>
-                    <svg
-                      className="w-20 h-20 text-green-400/50"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                    </svg>
+                    <img
+                      src="/plant_growth_promoter.png"
+                      alt="Plant Growth Promoter"
+                      className="w-full h-full object-contain p-6"
+                    />
                   </div>
                   <div className="p-6">
                     <h3 className="text-2xl font-light text-white mb-2">
-                      GrowthPlus
+                      Achiever
                     </h3>
                     <p className="text-sm text-white/60 leading-relaxed">
                       Enhances flowering, fruit setting and overall plant vigor
                       naturally.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Product 4: Fungicide */}
+                <div className="group backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
+                  <div className="h-48 bg-gradient-to-br from-purple-600/20 to-purple-800/20 flex items-center justify-center relative overflow-hidden">
+                    <div className="absolute top-4 right-4 px-3 py-1 bg-purple-500/20 backdrop-blur-xl border border-purple-500/30 rounded-full">
+                      <span className="text-xs text-purple-300 font-medium">
+                        Fungicide
+                      </span>
+                    </div>
+                    <img
+                      src="/fungiside.jpg"
+                      alt="Fungicide"
+                      className="w-full h-full object-contain p-6"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-2xl font-light text-white mb-2">
+                      Megic
+                    </h3>
+                    <p className="text-sm text-white/60 leading-relaxed">
+                      Systemic fungicide for comprehensive disease management
+                      and crop protection.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Product 5: Fertilizer */}
+                <div className="group backdrop-blur-2xl bg-gradient-to-br from-emerald-500/5 to-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
+                  <div className="h-48 bg-gradient-to-br from-blue-600/20 to-blue-800/20 flex items-center justify-center relative overflow-hidden">
+                    <div className="absolute top-4 right-4 px-3 py-1 bg-blue-500/20 backdrop-blur-xl border border-blue-500/30 rounded-full">
+                      <span className="text-xs text-blue-300 font-medium">
+                        Fertilizer
+                      </span>
+                    </div>
+                    <img
+                      src="/fertilizer.jpg"
+                      alt="Fertilizer"
+                      className="w-full h-full object-contain p-6"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-2xl font-light text-white mb-2">
+                      Rudra
+                    </h3>
+                    <p className="text-sm text-white/60 leading-relaxed">
+                      Complete nutrient solution for optimal plant growth and
+                      enhanced yield.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Product 6: Biological */}
+                <div className="group backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
+                  <div className="h-48 bg-gradient-to-br from-teal-600/20 to-teal-800/20 flex items-center justify-center relative overflow-hidden">
+                    <div className="absolute top-4 right-4 px-3 py-1 bg-teal-500/20 backdrop-blur-xl border border-teal-500/30 rounded-full">
+                      <span className="text-xs text-teal-300 font-medium">
+                        Biological
+                      </span>
+                    </div>
+                    <img
+                      src="/biological.jpg"
+                      alt="Biological"
+                      className="w-full h-full object-contain p-6"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-2xl font-light text-white mb-2">
+                      Amrut Phos
+                    </h3>
+                    <p className="text-sm text-white/60 leading-relaxed">
+                      Natural biological solution for sustainable and
+                      eco-friendly crop protection.
                     </p>
                   </div>
                 </div>
@@ -665,7 +722,7 @@ export default function Home() {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a
-                  href="#"
+                  href="/contact"
                   className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full font-medium hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 flex items-center gap-2"
                 >
                   Get in Touch
@@ -682,7 +739,7 @@ export default function Home() {
                   </svg>
                 </a>
                 <a
-                  href="#"
+                  href="/products"
                   className="px-8 py-4 backdrop-blur-xl bg-white/5 border border-white/20 text-white rounded-full font-medium hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
                 >
                   View Catalogue

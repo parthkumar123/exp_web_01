@@ -120,22 +120,22 @@ export default function ProductsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-emerald-950/20 to-zinc-950">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-emerald-900/30 to-zinc-900">
       <Navigation />
 
       {/* Hero Section */}
       <section className="pt-32 pb-16 relative">
-        <div className="absolute inset-0 bg-gradient-radial from-emerald-500/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-radial from-emerald-500/20 via-transparent to-transparent" />
         <div className="max-w-7xl mx-auto px-8 text-center relative z-10">
-          <div className="inline-block px-6 py-2 mb-8 backdrop-blur-xl bg-white/5 border border-white/10 rounded-full">
-            <span className="text-sm font-medium text-white/70 tracking-[0.2em] uppercase">
+          <div className="inline-block px-6 py-2 mb-8 backdrop-blur-xl bg-emerald-500/20 border border-emerald-500/40 rounded-full">
+            <span className="text-sm font-medium text-emerald-300 tracking-[0.2em] uppercase">
               Our Products
             </span>
           </div>
           <h1 className="text-6xl md:text-7xl font-extralight text-white mb-6 tracking-tight">
             Product Range
           </h1>
-          <p className="text-xl text-white/60 max-w-3xl mx-auto font-light">
+          <p className="text-xl text-white/80 max-w-3xl mx-auto font-light">
             Explore our comprehensive range of crop protection solutions,
             scientifically formulated for maximum efficacy
           </p>
@@ -163,7 +163,7 @@ export default function ProductsPage() {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 backdrop-blur-xl bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder-white/40"
+                className="w-full pl-12 pr-4 py-3 backdrop-blur-xl bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder-white/50"
               />
             </div>
           </div>
@@ -180,8 +180,8 @@ export default function ProductsPage() {
                 onClick={() => setActiveCategory(category.id)}
                 className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-300 backdrop-blur-xl ${
                   activeCategory === category.id
-                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                    : "bg-white/5 text-white/70 border border-white/10 hover:border-emerald-500/30 hover:text-white"
+                    ? "bg-emerald-500/30 text-emerald-300 border border-emerald-400/50"
+                    : "bg-white/10 text-white/75 border border-emerald-500/20 hover:border-emerald-400/40 hover:text-white hover:bg-white/15"
                 }`}
               >
                 <span className="text-lg">{category.icon}</span>
@@ -199,7 +199,7 @@ export default function ProductsPage() {
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-300 group"
+                className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-3xl overflow-hidden hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all duration-300 group"
               >
                 {/* Product Image */}
                 <div className="h-64 bg-gradient-to-br from-emerald-900/20 to-emerald-800/20 flex items-center justify-center relative overflow-hidden">
@@ -227,7 +227,7 @@ export default function ProductsPage() {
                   <h3 className="text-2xl font-light text-white mb-3">
                     {product.name}
                   </h3>
-                  <p className="text-white/60 text-sm mb-4 leading-relaxed font-light">
+                  <p className="text-white/75 text-sm mb-4 leading-relaxed font-light">
                     {product.description}
                   </p>
 

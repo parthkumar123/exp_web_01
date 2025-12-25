@@ -47,16 +47,16 @@ export default function Footer() {
   ];
 
   const quickLinks = [
-    { name: "About Us", url: "#" },
-    { name: "Our Products", url: "#" },
-    { name: "Contact Us", url: "#" },
+    { name: "About Us", url: "/about" },
+    { name: "Our Products", url: "/products" },
+    { name: "Contact Us", url: "/contact" },
   ];
 
   const productCategories = [
-    { name: "Insecticides", url: "#" },
-    { name: "Fungicides", url: "#" },
-    { name: "Herbicides", url: "#" },
-    { name: "Plant Growth Regulators", url: "#" },
+    { name: "Insecticides", url: "/products" },
+    { name: "Fungicides", url: "/products" },
+    { name: "Herbicides", url: "/products" },
+    { name: "Plant Growth Regulators", url: "/products" },
   ];
 
   return (
@@ -204,24 +204,6 @@ export default function Footer() {
                 >
                   +91 63549 14468
                 </a>
-              </li>
-              <li className="flex items-center gap-3 text-sm">
-                <svg
-                  className="w-5 h-5 text-emerald-400 flex-shrink-0"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-                <div className="text-white/60">
-                  <span className="text-xs text-emerald-400">
-                    Customer Care
-                  </span>
-                </div>
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <svg

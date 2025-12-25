@@ -36,16 +36,16 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-emerald-950/20 to-zinc-950">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-emerald-900/30 to-zinc-900">
       <Navigation />
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/30 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-900/40 via-transparent to-transparent" />
         <div className="max-w-7xl mx-auto px-8 relative z-10">
           <div className="text-center mb-12">
-            <div className="inline-block px-6 py-2 mb-8 backdrop-blur-xl bg-white/5 border border-white/10 rounded-full">
-              <span className="text-sm font-medium text-white/70 tracking-[0.2em] uppercase">
+            <div className="inline-block px-6 py-2 mb-8 backdrop-blur-xl bg-emerald-500/20 border border-emerald-500/40 rounded-full">
+              <span className="text-sm font-medium text-emerald-300 tracking-[0.2em] uppercase">
                 About Us
               </span>
             </div>
@@ -56,7 +56,7 @@ export default function AboutPage() {
                 Senso Agrotech?
               </span>
             </h1>
-            <p className="text-xl text-white/60 font-light max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl text-white/80 font-light max-w-4xl mx-auto leading-relaxed">
               With over 10 years of manufacturing excellence, we are committed
               to delivering superior crop protection solutions backed by
               scientific innovation and farmer trust.
@@ -72,7 +72,7 @@ export default function AboutPage() {
             {values.map((value, index) => (
               <div
                 key={index}
-                className="backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-2xl p-6 hover:border-emerald-500/30 transition-all duration-300 group flex flex-col"
+                className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6 hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all duration-300 group flex flex-col"
               >
                 <div
                   className={`w-14 h-14 bg-gradient-to-br ${value.bgColor} backdrop-blur-xl rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}
@@ -82,7 +82,7 @@ export default function AboutPage() {
                 <h3 className="text-xl font-light text-white mb-3">
                   {value.title}
                 </h3>
-                <p className="text-white/60 leading-relaxed font-light text-sm flex-grow">
+                <p className="text-white/75 leading-relaxed font-light text-sm flex-grow">
                   {value.description}
                 </p>
               </div>
@@ -93,11 +93,11 @@ export default function AboutPage() {
 
       {/* Our Story Section */}
       <section className="py-20 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-emerald-950/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-emerald-900/30 to-transparent" />
         <div className="max-w-7xl mx-auto px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <div className="inline-block px-4 py-1.5 mb-6 backdrop-blur-xl bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+              <div className="inline-block px-4 py-1.5 mb-6 backdrop-blur-xl bg-emerald-500/20 border border-emerald-400/40 rounded-full">
                 <span className="text-xs font-medium text-emerald-300 tracking-[0.2em] uppercase">
                   Our Story
                 </span>
@@ -107,7 +107,7 @@ export default function AboutPage() {
                 <br />
                 <span className="font-light text-emerald-400">Excellence</span>
               </h2>
-              <div className="space-y-6 text-white/60 leading-relaxed font-light">
+              <div className="space-y-6 text-white/75 leading-relaxed font-light">
                 <p>
                   Senso Agrotech Pvt. Ltd. had started as a small scale unit for
                   the manufacturing of crop protection chemical almost one
@@ -148,7 +148,7 @@ export default function AboutPage() {
 
             {/* Image Placeholder */}
             <div className="relative">
-              <div className="aspect-[4/3] backdrop-blur-2xl bg-gradient-to-br from-emerald-500/10 to-white/5 border border-white/10 rounded-3xl overflow-hidden">
+              <div className="aspect-[4/3] backdrop-blur-2xl bg-gradient-to-br from-emerald-500/20 to-white/10 border border-emerald-500/30 rounded-3xl overflow-hidden hover:border-emerald-400/50 transition-all duration-300">
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="text-center p-8">
                     <svg
@@ -175,7 +175,7 @@ export default function AboutPage() {
 
       {/* CTA Section */}
       <section className="py-20 relative">
-        <div className="absolute inset-0 bg-gradient-radial from-emerald-500/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-radial from-emerald-500/20 via-transparent to-transparent" />
         <div className="max-w-4xl mx-auto px-8 text-center relative z-10">
           <h2 className="text-5xl md:text-6xl font-extralight text-white mb-6 tracking-tight">
             Ready to Transform
@@ -184,7 +184,7 @@ export default function AboutPage() {
               Your Farming?
             </span>
           </h2>
-          <p className="text-xl text-white/60 font-light mb-8 leading-relaxed">
+          <p className="text-xl text-white/75 font-light mb-8 leading-relaxed">
             Join thousands of satisfied farmers who trust Senso Agrotech for
             their crop protection needs.
           </p>
