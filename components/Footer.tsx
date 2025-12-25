@@ -57,23 +57,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-white">
-                Senso Agrotech
-              </h3>
+            <div className="flex items-center">
+              <img
+                src="/logo.png"
+                alt="Senso Agrotech"
+                className="h-[77px] w-auto object-contain"
+              />
             </div>
             <p className="text-white/60 text-sm leading-relaxed">
               Manufacturing excellence in crop protection solutions. Registered
@@ -184,8 +173,8 @@ export default function Footer() {
                   <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <div className="text-white/60">
-                  <p>Plot No. 123, Industrial Area</p>
-                  <p>Gujarat, India - 380001</p>
+                  <p>J27W+397, Ankleshwar GIDC</p>
+                  <p>Ankleshwar, Gujarat 393002</p>
                 </div>
               </li>
               <li className="flex items-center gap-3 text-sm">
@@ -201,11 +190,29 @@ export default function Footer() {
                   <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+916354914468"
                   className="text-white/60 hover:text-emerald-400 transition-colors duration-300"
                 >
-                  +91 98765 43210
+                  +91 63549 14468
                 </a>
+              </li>
+              <li className="flex items-center gap-3 text-sm">
+                <svg
+                  className="w-5 h-5 text-emerald-400 flex-shrink-0"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <div className="text-white/60">
+                  <span className="text-xs text-emerald-400">
+                    Customer Care
+                  </span>
+                </div>
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <svg

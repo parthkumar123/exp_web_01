@@ -30,6 +30,10 @@ export const metadata: Metadata = {
   authors: [{ name: "Senso Agrotech Private Limited" }],
   creator: "Senso Agrotech Private Limited",
   publisher: "Senso Agrotech Private Limited",
+  icons: {
+    icon: [{ url: "/logo.png", sizes: "any", type: "image/png" }],
+    apple: [{ url: "/logo.png", sizes: "180x180", type: "image/png" }],
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",
@@ -38,12 +42,21 @@ export const metadata: Metadata = {
     description:
       "Manufacturing excellence in crop protection solutions. Trusted by 10K+ farmers nationwide.",
     siteName: "Senso Agrotech",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Senso Agrotech Logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Senso Agrotech - Protecting Crops, Empowering Farmers",
     description:
       "Premium crop protection solutions. 50+ Products. 10+ Years Excellence.",
+    images: ["/logo.png"],
   },
   robots: {
     index: true,

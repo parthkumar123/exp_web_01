@@ -3,17 +3,10 @@
 import VideoBackground from "@/components/VideoBackground";
 import CustomCursor from "@/components/CustomCursor";
 import { DayNightToggle, DayNightProvider } from "@/components/DayNightToggle";
-import { useHapticScroll } from "@/hooks/useHapticScroll";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
 
 export default function Home() {
-  // Enable haptic scrolling with inertia and section weight
-  useHapticScroll({
-    smoothness: 1.2,
-    snapToSections: true,
-  });
-
   return (
     <DayNightProvider>
       <div className="relative bg-gradient-to-br from-zinc-950 via-emerald-950/20 to-zinc-950">

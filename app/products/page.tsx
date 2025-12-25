@@ -203,7 +203,7 @@ export default function ProductsPage() {
               >
                 {/* Product Image */}
                 <div className="h-64 bg-gradient-to-br from-emerald-900/20 to-emerald-800/20 flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute top-4 right-4 px-3 py-1 bg-red-500/80 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
+                  <div className="absolute top-4 right-4 px-3 py-1 bg-blue-500/80 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
                     {product.category}
                   </div>
                   {/* Placeholder Icon */}

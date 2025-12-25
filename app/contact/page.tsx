@@ -121,9 +121,9 @@ export default function ContactPage() {
 
               {/* Email Us */}
               <div className="backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-2xl p-8 hover:border-emerald-500/30 transition-all">
-                <div className="w-14 h-14 bg-gradient-to-br from-red-600/20 to-red-800/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6">
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-600/20 to-blue-800/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6">
                   <svg
-                    className="w-7 h-7 text-red-400"
+                    className="w-7 h-7 text-blue-400"
                     fill="none"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -280,7 +280,7 @@ export default function ContactPage() {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                   >
                     <svg
                       className="w-5 h-5"

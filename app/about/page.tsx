@@ -24,7 +24,7 @@ export default function AboutPage() {
       icon: "👨‍🌾",
       description:
         "Building lasting relationships with farmers through comprehensive support, training, and accessible pricing.",
-      bgColor: "from-red-600/20 to-red-800/20",
+      bgColor: "from-blue-600/20 to-blue-800/20",
     },
     {
       title: "Vision",
