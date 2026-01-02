@@ -1,12 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import Link from "next/link";
+
+interface Product {
+  _id: string;
+  slug: string;
+  name: string;
+  category: string;
+  image: string;
+  description: string;
+  activeIngredient: string;
+  targetPests: string[];
+}
 
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [activeCategory]);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const url =
+        activeCategory === "All"
+          ? "/api/products"
+          : `/api/products?category=${activeCategory}`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.success) {
+        setProducts(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const categories = [
     { id: "All", name: "All", icon: "🌿" },
@@ -14,109 +53,15 @@ export default function ProductsPage() {
     { id: "Fungicides", name: "Fungicides", icon: "🍄" },
     { id: "Herbicides", name: "Herbicides", icon: "🌾" },
     { id: "PGR", name: "Plant Growth Regulators", icon: "🌱" },
-    { id: "Bio", name: "Bio Fertilizers", icon: "♻️" },
-  ];
-
-  const products = [
-    {
-      id: 1,
-      name: "BioShield Pro",
-      category: "Insecticides",
-      image: "/images/product-1.jpg",
-      description:
-        "Advanced protection against sucking and chewing pests with extended residual action.",
-      active: "Imidacloprid 17.8% SL",
-      target: "Aphids, Whiteflies, Jassids",
-    },
-    {
-      id: 2,
-      name: "AgriGuard Elite",
-      category: "Insecticides",
-      image: "/images/product-2.jpg",
-      description:
-        "Broad-spectrum insecticide for effective control of lepidopteran pests.",
-      active: "Chlorantraniliprole 18.5% SC",
-      target: "Bollworms, Stem Borers, Fruit Borers",
-    },
-    {
-      id: 3,
-      name: "CropSafe Max",
-      category: "Insecticides",
-      image: "/images/product-3.jpg",
-      description:
-        "Systemic insecticide with translaminar activity for complete pest management.",
-      active: "Thiamethoxam 25% WG",
-      target: "Thrips, Hoppers, Bugs",
-    },
-    {
-      id: 4,
-      name: "FungiGuard Elite",
-      category: "Fungicides",
-      image: "/images/product-4.jpg",
-      description:
-        "Systemic fungicide for comprehensive disease management in all crops.",
-      active: "Tebuconazole 25.9% EC",
-      target: "Rust, Blight, Mildew",
-    },
-    {
-      id: 5,
-      name: "CropCure Plus",
-      category: "Fungicides",
-      image: "/images/product-5.jpg",
-      description:
-        "Broad-spectrum fungicide with protective and curative action.",
-      active: "Mancozeb 75% WP",
-      target: "Various Fungal Diseases",
-    },
-    {
-      id: 6,
-      name: "WeedFree Max",
-      category: "Herbicides",
-      image: "/images/product-6.jpg",
-      description:
-        "Selective herbicide with pre and post-emergence activity for major crops.",
-      active: "Pendimethalin 30% EC",
-      target: "Grassy & Broadleaf Weeds",
-    },
-    {
-      id: 7,
-      name: "HerbStop Pro",
-      category: "Herbicides",
-      image: "/images/product-7.jpg",
-      description:
-        "Post-emergence herbicide for effective control of annual weeds.",
-      active: "2,4-D Ethyl Ester 38% EC",
-      target: "Broadleaf Weeds",
-    },
-    {
-      id: 8,
-      name: "GrowthPlus",
-      category: "PGR",
-      image: "/images/product-8.jpg",
-      description:
-        "Enhances flowering, fruit setting and overall plant vigor naturally.",
-      active: "Gibberellic Acid 0.001% L",
-      target: "All Crops",
-    },
-    {
-      id: 9,
-      name: "BloomBoost",
-      category: "PGR",
-      image: "/images/product-9.jpg",
-      description:
-        "Promotes cell division and improves crop yield significantly.",
-      active: "Cytokinin 0.09% L",
-      target: "Fruits & Vegetables",
-    },
+    { id: "Fertilizers", name: "Fertilizers", icon: "♻️" },
+    { id: "Biological", name: "Biological", icon: "🌱" },
   ];
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      activeCategory === "All" || product.category === activeCategory;
     const matchesSearch = product.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return matchesSearch;
   });
 
   return (
@@ -195,73 +140,78 @@ export default function ProductsPage() {
       {/* Products Grid */}
       <section className="py-16 relative">
         <div className="max-w-7xl mx-auto px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-3xl overflow-hidden hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all duration-300 group"
-              >
-                {/* Product Image */}
-                <div className="h-64 bg-gradient-to-br from-emerald-900/20 to-emerald-800/20 flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute top-4 right-4 px-3 py-1 bg-blue-500/80 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
-                    {product.category}
-                  </div>
-                  {/* Placeholder Icon */}
-                  <div className="w-32 h-32 bg-white/5 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <svg
-                      className="w-20 h-20 text-emerald-400"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Product Details */}
-                <div className="p-6">
-                  <h3 className="text-2xl font-light text-white mb-3">
-                    {product.name}
-                  </h3>
-                  <p className="text-white/75 text-sm mb-4 leading-relaxed font-light">
-                    {product.description}
-                  </p>
-
-                  {/* Active Ingredient */}
-                  <div className="mb-3">
-                    <p className="text-xs font-semibold text-white/50 mb-1">
-                      Active:
-                    </p>
-                    <p className="text-sm text-white/80">{product.active}</p>
-                  </div>
-
-                  {/* Target */}
-                  <div className="mb-4">
-                    <p className="text-xs font-semibold text-white/50 mb-1">
-                      Target:
-                    </p>
-                    <p className="text-sm text-white/80">{product.target}</p>
-                  </div>
-
-                  {/* CTA Button */}
-                  <button className="w-full py-3 bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 text-emerald-300 font-medium rounded-lg hover:bg-emerald-500/30 transition-colors duration-300">
-                    View Details
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredProducts.length === 0 && (
+          {loading ? (
             <div className="text-center py-16">
-              <p className="text-white/50 text-lg">
-                No products found matching your criteria.
-              </p>
+              <p className="text-white/50 text-lg">Loading products...</p>
             </div>
+          ) : (
+            <>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredProducts.map((product) => (
+                  <Link
+                    key={product._id}
+                    href={`/products/${product.slug}`}
+                    className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-3xl overflow-hidden hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all duration-300 group cursor-pointer"
+                  >
+                    {/* Product Image */}
+                    <div className="h-64 bg-gradient-to-br from-emerald-900/20 to-emerald-800/20 flex items-center justify-center relative overflow-hidden p-6">
+                      <div className="absolute top-4 right-4 px-3 py-1 bg-blue-500/80 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
+                        {product.category}
+                      </div>
+                      {/* Product Image */}
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
+
+                    {/* Product Details */}
+                    <div className="p-6">
+                      <h3 className="text-2xl font-light text-white mb-3">
+                        {product.name}
+                      </h3>
+                      <p className="text-white/75 text-sm mb-4 leading-relaxed font-light">
+                        {product.description}
+                      </p>
+
+                      {/* Active Ingredient */}
+                      <div className="mb-3">
+                        <p className="text-xs font-semibold text-white/50 mb-1">
+                          Active:
+                        </p>
+                        <p className="text-sm text-white/80">
+                          {product.activeIngredient}
+                        </p>
+                      </div>
+
+                      {/* Target */}
+                      <div className="mb-4">
+                        <p className="text-xs font-semibold text-white/50 mb-1">
+                          Target:
+                        </p>
+                        <p className="text-sm text-white/80">
+                          {product.targetPests.join(", ")}
+                        </p>
+                      </div>
+
+                      {/* CTA Button */}
+                      <div className="w-full py-3 bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 text-emerald-300 font-medium rounded-lg group-hover:bg-emerald-500/30 transition-colors duration-300 text-center">
+                        View Details
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {filteredProducts.length === 0 && !loading && (
+                <div className="text-center py-16">
+                  <p className="text-white/50 text-lg">
+                    No products found matching your criteria.
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

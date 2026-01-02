@@ -50,7 +50,10 @@ export default function Navigation() {
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center group relative z-[10001]">
+            <Link
+              href="/"
+              className="flex items-center group relative z-[10001]"
+            >
               <img
                 src="/logo.png"
                 alt="Senso Agrotech"
@@ -73,7 +76,9 @@ export default function Navigation() {
                   {link.name}
                   <span
                     className={`absolute -bottom-1 left-0 h-0.5 bg-emerald-400 transition-all duration-300 ${
-                      pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+                      pathname === link.href
+                        ? "w-full"
+                        : "w-0 group-hover:w-full"
                     }`}
                   />
                 </Link>
@@ -124,7 +129,7 @@ export default function Navigation() {
             className="absolute inset-0 bg-black/98 backdrop-blur-2xl"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          
+
           {/* Menu content */}
           <div className="relative h-full flex flex-col pt-24 px-6">
             <div className="flex-1 overflow-y-auto">
@@ -146,14 +151,16 @@ export default function Navigation() {
                     {link.name}
                   </Link>
                 ))}
-                
+
                 {/* Get Quote Button */}
                 <Link
                   href="/contact"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="mt-6 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-center text-xl font-medium rounded-full hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-xl shadow-blue-500/50"
                   style={{
-                    animation: `slideIn 0.3s ease-out ${navLinks.length * 0.1}s both`,
+                    animation: `slideIn 0.3s ease-out ${
+                      navLinks.length * 0.1
+                    }s both`,
                   }}
                 >
                   Get Quote

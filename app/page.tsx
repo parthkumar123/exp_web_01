@@ -1,11 +1,55 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import VideoBackground from "@/components/VideoBackground";
 import { DayNightToggle, DayNightProvider } from "@/components/DayNightToggle";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
+import Link from "next/link";
+
+interface Product {
+  _id: string;
+  name: string;
+  slug: string;
+  category: string;
+  image: string;
+  description: string;
+}
 
 export default function Home() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFeaturedProducts();
+  }, []);
+
+  const fetchFeaturedProducts = async () => {
+    try {
+      const res = await fetch("/api/products?featured=true");
+      const data = await res.json();
+      if (data.success) {
+        setFeaturedProducts(data.data.slice(0, 3)); // Show max 3 products
+      }
+    } catch (error) {
+      console.error("Error fetching featured products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    const colors: { [key: string]: string } = {
+      Insecticides: "emerald",
+      Fungicides: "blue",
+      Herbicides: "amber",
+      PGR: "green",
+      Fertilizers: "purple",
+      Biological: "teal",
+    };
+    return colors[category] || "emerald";
+  };
+
   return (
     <DayNightProvider>
       <div className="relative bg-gradient-to-br from-zinc-950 via-emerald-950/20 to-zinc-950">
@@ -545,157 +589,81 @@ export default function Home() {
               </div>
 
               {/* Products Grid */}
-              <div className="grid md:grid-cols-3 gap-8">
-                {/* Product 1: Insecticide */}
-                <div className="group backdrop-blur-2xl bg-gradient-to-br from-emerald-500/5 to-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
-                  <div className="h-48 bg-gradient-to-br from-emerald-600/20 to-emerald-800/20 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute top-4 right-4 px-3 py-1 bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-full">
-                      <span className="text-xs text-emerald-300 font-medium">
-                        Insecticide
-                      </span>
-                    </div>
-                    <img
-                      src="/insectiside.png"
-                      alt="Insecticide"
-                      className="w-full h-full object-contain p-6"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-light text-white mb-2">
-                      Dhanush
-                    </h3>
-                    <p className="text-sm text-white/60 leading-relaxed">
-                      Advanced insecticide for effective pest control and crop
-                      protection.
-                    </p>
-                  </div>
+              {loading ? (
+                <div className="text-center py-20">
+                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+                  <p className="mt-4 text-white/60">
+                    Loading featured products...
+                  </p>
                 </div>
+              ) : featuredProducts.length > 0 ? (
+                <div className="grid md:grid-cols-3 gap-8">
+                  {featuredProducts.map((product) => {
+                    const color = getCategoryColor(product.category);
+                    return (
+                      <Link
+                        key={product._id}
+                        href={`/products/${product.slug}`}
+                        className="group backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500 hover:scale-105"
+                      >
+                        <div
+                          className={`h-48 bg-gradient-to-br from-${color}-600/20 to-${color}-800/20 flex items-center justify-center relative overflow-hidden`}
+                        >
+                          <div
+                            className={`absolute top-4 right-4 px-3 py-1 bg-${color}-500/20 backdrop-blur-xl border border-${color}-500/30 rounded-full`}
+                          >
+                            <span
+                              className={`text-xs text-${color}-300 font-medium`}
+                            >
+                              {product.category}
+                            </span>
+                          </div>
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-contain p-6"
+                            onError={(e) => {
+                              e.currentTarget.src = "/placeholder-product.png";
+                            }}
+                          />
+                        </div>
+                        <div className="p-6">
+                          <h3 className="text-2xl font-light text-white mb-2">
+                            {product.name}
+                          </h3>
+                          <p className="text-sm text-white/60 leading-relaxed line-clamp-2">
+                            {product.description}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-20">
+                  <p className="text-white/60 text-lg">
+                    No featured products available at the moment.
+                  </p>
+                  <Link
+                    href="/products"
+                    className="inline-block mt-6 px-6 py-3 bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 text-emerald-300 font-medium rounded-lg hover:bg-emerald-500/30 transition-colors"
+                  >
+                    View All Products
+                  </Link>
+                </div>
+              )}
 
-                {/* Product 2: Herbicide */}
-                <div className="group backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
-                  <div className="h-48 bg-gradient-to-br from-amber-600/20 to-amber-800/20 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute top-4 right-4 px-3 py-1 bg-amber-500/20 backdrop-blur-xl border border-amber-500/30 rounded-full">
-                      <span className="text-xs text-amber-300 font-medium">
-                        Herbicide
-                      </span>
-                    </div>
-                    <img
-                      src="/harbiside.png"
-                      alt="Herbicide"
-                      className="w-full h-full object-contain p-6"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-light text-white mb-2">
-                      Glocell
-                    </h3>
-                    <p className="text-sm text-white/60 leading-relaxed">
-                      Selective herbicide with pre and post-emergence activity
-                      for major crops.
-                    </p>
-                  </div>
+              {/* View All Products Button */}
+              {featuredProducts.length > 0 && (
+                <div className="text-center mt-12">
+                  <Link
+                    href="/products"
+                    className="inline-block px-8 py-4 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 backdrop-blur-xl border border-emerald-500/30 text-white font-medium rounded-xl hover:from-emerald-500/30 hover:to-blue-500/30 transition-all duration-300"
+                  >
+                    View All Products →
+                  </Link>
                 </div>
-
-                {/* Product 3: Plant Growth Promoter */}
-                <div className="group backdrop-blur-2xl bg-gradient-to-br from-emerald-500/5 to-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
-                  <div className="h-48 bg-gradient-to-br from-green-600/20 to-green-800/20 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute top-4 right-4 px-3 py-1 bg-green-500/20 backdrop-blur-xl border border-green-500/30 rounded-full">
-                      <span className="text-xs text-green-300 font-medium">
-                        Plant Growth Regulator
-                      </span>
-                    </div>
-                    <img
-                      src="/plant_growth_promoter.png"
-                      alt="Plant Growth Promoter"
-                      className="w-full h-full object-contain p-6"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-light text-white mb-2">
-                      Achiever
-                    </h3>
-                    <p className="text-sm text-white/60 leading-relaxed">
-                      Enhances flowering, fruit setting and overall plant vigor
-                      naturally.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Product 4: Fungicide */}
-                <div className="group backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
-                  <div className="h-48 bg-gradient-to-br from-purple-600/20 to-purple-800/20 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute top-4 right-4 px-3 py-1 bg-purple-500/20 backdrop-blur-xl border border-purple-500/30 rounded-full">
-                      <span className="text-xs text-purple-300 font-medium">
-                        Fungicide
-                      </span>
-                    </div>
-                    <img
-                      src="/fungiside.jpg"
-                      alt="Fungicide"
-                      className="w-full h-full object-contain p-6"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-light text-white mb-2">
-                      Megic
-                    </h3>
-                    <p className="text-sm text-white/60 leading-relaxed">
-                      Systemic fungicide for comprehensive disease management
-                      and crop protection.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Product 5: Fertilizer */}
-                <div className="group backdrop-blur-2xl bg-gradient-to-br from-emerald-500/5 to-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
-                  <div className="h-48 bg-gradient-to-br from-blue-600/20 to-blue-800/20 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute top-4 right-4 px-3 py-1 bg-blue-500/20 backdrop-blur-xl border border-blue-500/30 rounded-full">
-                      <span className="text-xs text-blue-300 font-medium">
-                        Fertilizer
-                      </span>
-                    </div>
-                    <img
-                      src="/fertilizer.jpg"
-                      alt="Fertilizer"
-                      className="w-full h-full object-contain p-6"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-light text-white mb-2">
-                      Rudra
-                    </h3>
-                    <p className="text-sm text-white/60 leading-relaxed">
-                      Complete nutrient solution for optimal plant growth and
-                      enhanced yield.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Product 6: Biological */}
-                <div className="group backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500">
-                  <div className="h-48 bg-gradient-to-br from-teal-600/20 to-teal-800/20 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute top-4 right-4 px-3 py-1 bg-teal-500/20 backdrop-blur-xl border border-teal-500/30 rounded-full">
-                      <span className="text-xs text-teal-300 font-medium">
-                        Biological
-                      </span>
-                    </div>
-                    <img
-                      src="/biological.jpg"
-                      alt="Biological"
-                      className="w-full h-full object-contain p-6"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-light text-white mb-2">
-                      Amrut Phos
-                    </h3>
-                    <p className="text-sm text-white/60 leading-relaxed">
-                      Natural biological solution for sustainable and
-                      eco-friendly crop protection.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           </section>
 
