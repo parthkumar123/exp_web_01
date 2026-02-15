@@ -57,6 +57,8 @@ export default function Footer() {
     { name: "Fungicides", url: "/products" },
     { name: "Herbicides", url: "/products" },
     { name: "Plant Growth Regulators", url: "/products" },
+    { name: "Biological", url: "/products" },
+    { name: "Fertilizers", url: "/products" },
   ];
 
   return (
