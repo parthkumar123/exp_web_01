@@ -440,7 +440,7 @@ export default function Home() {
                 {/* Stat 1 */}
                 <div className="backdrop-blur-2xl bg-gradient-to-br from-emerald-500/10 to-white/5 border border-white/10 rounded-3xl p-8 text-center hover:border-emerald-500/30 transition-all duration-500">
                   <div className="text-6xl md:text-7xl font-extralight text-emerald-400 mb-3">
-                    110+
+                    150+
                   </div>
                   <div className="text-sm text-white/70 uppercase tracking-wider">
                     Products
@@ -466,7 +466,7 @@ export default function Home() {
                 {/* Stat 3 */}
                 <div className="backdrop-blur-2xl bg-gradient-to-br from-emerald-500/10 to-white/5 border border-white/10 rounded-3xl p-8 text-center hover:border-emerald-500/30 transition-all duration-500">
                   <div className="text-6xl md:text-7xl font-extralight text-emerald-400 mb-3">
-                    15K+
+                    25K+
                   </div>
                   <div className="text-sm text-white/70 uppercase tracking-wider">
                     Happy Farmers

@@ -30,9 +30,9 @@ export const companyInfo = {
 
   // Company Stats
   stats: {
-    products: "110+",
+    products: "150+",
     experience: "10+",
-    farmers: "15K+",
+    farmers: "25K+",
     growthRate: "+35% YoY",
     customerSatisfaction: "98%",
     productQuality: "99%",
