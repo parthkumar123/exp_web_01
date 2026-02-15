@@ -25,6 +25,7 @@ export const companyInfo = {
       full: "Plot No. 123, Industrial Area, Gujarat, India - 380001",
     },
     phone: "+91 98765 43210",
+    whatsapp: "+916354914468", // same as contact page number, no spaces for wa.me link
     email: "sensoagrotech2909@gmail.com",
   },
 
