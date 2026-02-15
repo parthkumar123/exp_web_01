@@ -251,19 +251,19 @@ export default function Footer() {
             </p>
             <div className="flex gap-6 text-sm text-white/50">
               <a
-                href="#"
+                href="/privacy"
                 className="hover:text-emerald-400 transition-colors duration-300"
               >
                 Privacy Policy
               </a>
               <a
-                href="#"
+                href="/terms"
                 className="hover:text-emerald-400 transition-colors duration-300"
               >
                 Terms of Service
               </a>
               <a
-                href="#"
+                href="/site-map"
                 className="hover:text-emerald-400 transition-colors duration-300"
               >
                 Sitemap
