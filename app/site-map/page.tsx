@@ -1,6 +1,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import PageBackgroundImage from "@/components/PageBackgroundImage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -33,7 +34,9 @@ const productCategories = [
 
 export default function SitemapPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-emerald-900/30 to-zinc-900">
+    <div className="min-h-screen relative">
+      <PageBackgroundImage imageOpacity={0.18} />
+      <div className="relative z-10">
       <Navigation />
 
       <section className="pt-32 pb-16 relative">
@@ -57,7 +60,7 @@ export default function SitemapPage() {
         <div className="max-w-4xl mx-auto px-8">
           <div className="grid md:grid-cols-3 gap-10">
             {/* Main pages */}
-            <div className="backdrop-blur-2xl bg-white/5 border border-emerald-500/20 rounded-2xl p-6">
+            <div className="rounded-2xl border border-slate-500/30 bg-gradient-to-br from-slate-700/90 to-emerald-900/40 p-6">
               <h2 className="text-lg font-semibold text-white mb-4 border-b border-emerald-500/30 pb-2">
                 Main
               </h2>
@@ -66,7 +69,7 @@ export default function SitemapPage() {
                   <li key={page.href}>
                     <Link
                       href={page.href}
-                      className="text-white/70 hover:text-emerald-400 transition-colors text-sm"
+                      className="text-slate-200 hover:text-emerald-400 transition-colors text-sm"
                     >
                       {page.name}
                     </Link>
@@ -76,7 +79,7 @@ export default function SitemapPage() {
             </div>
 
             {/* Product categories */}
-            <div className="backdrop-blur-2xl bg-white/5 border border-emerald-500/20 rounded-2xl p-6">
+            <div className="rounded-2xl border border-slate-500/30 bg-gradient-to-br from-slate-700/90 to-emerald-900/40 p-6">
               <h2 className="text-lg font-semibold text-white mb-4 border-b border-emerald-500/30 pb-2">
                 Product Categories
               </h2>
@@ -85,7 +88,7 @@ export default function SitemapPage() {
                   <li key={cat.href}>
                     <Link
                       href={cat.href}
-                      className="text-white/70 hover:text-emerald-400 transition-colors text-sm"
+                      className="text-slate-200 hover:text-emerald-400 transition-colors text-sm"
                     >
                       {cat.name}
                     </Link>
@@ -95,7 +98,7 @@ export default function SitemapPage() {
             </div>
 
             {/* Legal */}
-            <div className="backdrop-blur-2xl bg-white/5 border border-emerald-500/20 rounded-2xl p-6">
+            <div className="rounded-2xl border border-slate-500/30 bg-gradient-to-br from-slate-700/90 to-emerald-900/40 p-6">
               <h2 className="text-lg font-semibold text-white mb-4 border-b border-emerald-500/30 pb-2">
                 Legal &amp; Info
               </h2>
@@ -104,7 +107,7 @@ export default function SitemapPage() {
                   <li key={page.href}>
                     <Link
                       href={page.href}
-                      className="text-white/70 hover:text-emerald-400 transition-colors text-sm"
+                      className="text-slate-200 hover:text-emerald-400 transition-colors text-sm"
                     >
                       {page.name}
                     </Link>
@@ -127,6 +130,7 @@ export default function SitemapPage() {
       </section>
 
       <Footer />
+      </div>
     </div>
   );
 }

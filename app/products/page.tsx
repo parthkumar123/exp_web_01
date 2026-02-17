@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import PageBackgroundImage from "@/components/PageBackgroundImage";
+import { ProductBadge, parseBadgeItems } from "@/components/ProductBadge";
 
 interface Product {
   _id: string;
@@ -16,6 +18,34 @@ interface Product {
   targetPests: string[];
 }
 
+const CATEGORIES = [
+  { id: "All", name: "All Products", icon: "🌿" },
+  { id: "Insecticides", name: "Insecticides", icon: "🛡️" },
+  { id: "Fungicides", name: "Fungicides", icon: "🍄" },
+  { id: "Herbicides", name: "Herbicides", icon: "🌾" },
+  { id: "PGR", name: "PGR", icon: "🌱" },
+  { id: "Fertilizers", name: "Fertilizers", icon: "♻️" },
+  { id: "Biological", name: "Biological", icon: "🌐" },
+];
+
+function ProductCardSkeleton() {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] overflow-hidden animate-pulse">
+      <div className="h-56 bg-white/[0.03]" />
+      <div className="p-5 space-y-3 bg-white/[0.04]">
+        <div className="h-5 bg-slate-500/50 rounded w-3/4" />
+        <div className="h-3 bg-slate-500/40 rounded w-full" />
+        <div className="h-3 bg-slate-500/40 rounded w-5/6" />
+        <div className="flex gap-2 pt-2">
+          <div className="h-6 bg-slate-500/40 rounded-full w-20" />
+          <div className="h-6 bg-slate-500/40 rounded-full w-24" />
+        </div>
+        <div className="h-10 bg-slate-500/40 rounded-xl w-full mt-4" />
+      </div>
+    </div>
+  );
+}
+
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
@@ -23,200 +53,185 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchProducts();
+    setLoading(true);
+    const url =
+      activeCategory === "All"
+        ? "/api/products"
+        : `/api/products?category=${activeCategory}`;
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => (data.success ? setProducts(data.data) : setProducts([])))
+      .catch(() => setProducts([]))
+      .finally(() => setLoading(false));
   }, [activeCategory]);
 
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const url =
-        activeCategory === "All"
-          ? "/api/products"
-          : `/api/products?category=${activeCategory}`;
-
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (data.success) {
-        setProducts(data.data);
-      }
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const categories = [
-    { id: "All", name: "All", icon: "🌿" },
-    { id: "Insecticides", name: "Insecticides", icon: "🛡️" },
-    { id: "Fungicides", name: "Fungicides", icon: "🍄" },
-    { id: "Herbicides", name: "Herbicides", icon: "🌾" },
-    { id: "PGR", name: "Plant Growth Regulators", icon: "🌱" },
-    { id: "Fertilizers", name: "Fertilizers", icon: "♻️" },
-    { id: "Biological", name: "Biological", icon: "🌱" },
-  ];
-
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesSearch;
-  });
+  const filteredProducts = useMemo(() => {
+    if (!searchQuery.trim()) return products;
+    const q = searchQuery.toLowerCase();
+    return products.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q) ||
+        p.activeIngredient?.toLowerCase().includes(q) ||
+        p.targetPests?.some((t) => t.toLowerCase().includes(q))
+    );
+  }, [products, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-emerald-900/30 to-zinc-900">
+    <div className="min-h-screen relative">
+      <PageBackgroundImage />
+      <div className="relative z-10">
       <Navigation />
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 relative">
-        <div className="absolute inset-0 bg-gradient-radial from-emerald-500/20 via-transparent to-transparent" />
-        <div className="max-w-7xl mx-auto px-8 text-center relative z-10">
-          <div className="inline-block px-6 py-2 mb-8 backdrop-blur-xl bg-emerald-500/20 border border-emerald-500/40 rounded-full">
-            <span className="text-sm font-medium text-emerald-300 tracking-[0.2em] uppercase">
-              Our Products
-            </span>
-          </div>
-          <h1 className="text-6xl md:text-7xl font-extralight text-white mb-6 tracking-tight">
-            Product Range
+      {/* Hero - compact and focused */}
+      <section className="relative pt-28 pb-10 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/40 via-transparent to-transparent" />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(ellipse_80%_80%_at_70%_20%,rgba(16,185,129,0.12),transparent)]" />
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          <h1 className="text-4xl md:text-5xl font-semibold text-white tracking-tight">
+            Product catalogue
           </h1>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto font-light">
-            Explore our comprehensive range of crop protection solutions,
-            scientifically formulated for maximum efficacy
+          <p className="mt-2 text-lg text-white/60 max-w-xl">
+            Crop protection solutions for higher yields. Browse by category or search by name, ingredient, or target.
           </p>
         </div>
       </section>
 
-      {/* Search Bar */}
-      <section className="py-8 relative">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="max-w-2xl mx-auto">
-            <div className="relative">
-              <svg
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/40"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+      {/* Search + filters - inline with content, no black bar */}
+      <section className="max-w-6xl mx-auto px-6 pt-4 pb-8">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="relative flex-1 sm:max-w-xs">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </span>
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 backdrop-blur-xl bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder-white/50"
+                className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500/50 transition-all backdrop-blur-sm"
               />
             </div>
+            <p className="text-white/50 text-sm sm:ml-2">
+              {loading ? "Loading..." : searchQuery ? `${filteredProducts.length} result${filteredProducts.length !== 1 ? "s" : ""}` : `${filteredProducts.length} product${filteredProducts.length !== 1 ? "s" : ""}`}
+            </p>
+          </div>
+          <div>
+            <p className="text-white/50 text-xs uppercase tracking-wider mb-3">Filter by category</p>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                    activeCategory === cat.id
+                      ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/25"
+                      : "bg-white/10 text-white/90 border border-white/20 hover:bg-white/15 hover:border-emerald-500/30"
+                  }`}
+                >
+                  <span>{cat.icon}</span>
+                  <span>{cat.name}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Category Filter */}
-      <section className="py-8 relative">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="flex flex-wrap gap-4 justify-center">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-300 backdrop-blur-xl ${
-                  activeCategory === category.id
-                    ? "bg-emerald-500/30 text-emerald-300 border border-emerald-400/50"
-                    : "bg-white/10 text-white/75 border border-emerald-500/20 hover:border-emerald-400/40 hover:text-white hover:bg-white/15"
-                }`}
-              >
-                <span className="text-lg">{category.icon}</span>
-                <span>{category.name}</span>
-              </button>
+      {/* Results count + grid */}
+      <section className="max-w-6xl mx-auto px-6 py-6">
+        <div className="flex items-center justify-end mb-6">
+          {!loading && filteredProducts.length > 0 ? (
+            <Link
+              href="/contact"
+              className="text-sm font-medium text-emerald-300 hover:text-emerald-200 transition-colors"
+            >
+              Need help? Contact us →
+            </Link>
+          ) : null}
+          {/* count in search section above */}
+        </div>
+
+        {loading ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <ProductCardSkeleton key={i} />
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Products Grid */}
-      <section className="py-16 relative">
-        <div className="max-w-7xl mx-auto px-8">
-          {loading ? (
-            <div className="text-center py-16">
-              <p className="text-white/50 text-lg">Loading products...</p>
+        ) : filteredProducts.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-white/5 flex items-center justify-center text-3xl mb-4">
+              🔍
             </div>
-          ) : (
-            <>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredProducts.map((product) => (
-                  <Link
-                    key={product._id}
-                    href={`/products/${product.slug}`}
-                    className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-3xl overflow-hidden hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all duration-300 group cursor-pointer"
-                  >
-                    {/* Product Image */}
-                    <div className="h-64 bg-gradient-to-br from-emerald-900/20 to-emerald-800/20 flex items-center justify-center relative overflow-hidden p-6">
-                      <div className="absolute top-4 right-4 px-3 py-1 bg-blue-500/80 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
-                        {product.category}
-                      </div>
-                      {/* Product Image */}
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                      />
-                    </div>
-
-                    {/* Product Details */}
-                    <div className="p-6">
-                      <h3 className="text-2xl font-light text-white mb-3">
-                        {product.name}
-                      </h3>
-                      <p className="text-white/75 text-sm mb-4 leading-relaxed font-light">
-                        {product.description}
-                      </p>
-
-                      {/* Active Ingredient */}
-                      <div className="mb-3">
-                        <p className="text-xs font-semibold text-white/50 mb-1">
-                          Active:
-                        </p>
-                        <p className="text-sm text-white/80">
-                          {product.activeIngredient}
-                        </p>
-                      </div>
-
-                      {/* Target */}
-                      <div className="mb-4">
-                        <p className="text-xs font-semibold text-white/50 mb-1">
-                          Target:
-                        </p>
-                        <p className="text-sm text-white/80">
-                          {product.targetPests.join(", ")}
-                        </p>
-                      </div>
-
-                      {/* CTA Button */}
-                      <div className="w-full py-3 bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 text-emerald-300 font-medium rounded-lg group-hover:bg-emerald-500/30 transition-colors duration-300 text-center">
-                        View Details
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-
-              {filteredProducts.length === 0 && !loading && (
-                <div className="text-center py-16">
-                  <p className="text-white/50 text-lg">
-                    No products found matching your criteria.
-                  </p>
+            <h2 className="text-xl font-medium text-white mb-2">No products found</h2>
+            <p className="text-white/60 max-w-sm mx-auto mb-6">
+              Try a different search term or category, or browse all products.
+            </p>
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setActiveCategory("All");
+              }}
+              className="px-5 py-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-medium hover:bg-emerald-500/30 transition-colors"
+            >
+              Clear filters
+            </button>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProducts.map((product) => (
+              <Link
+                key={product._id}
+                href={`/products/${product.slug}`}
+                className="group rounded-2xl border border-white/10 bg-white/[0.04] overflow-hidden hover:border-white/20 hover:bg-white/[0.06] hover:shadow-xl hover:shadow-black/20 transition-all duration-300"
+              >
+                <div className="relative h-52 bg-white/[0.03] flex items-center justify-center p-6">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <span className="absolute top-3 right-3">
+                    <ProductBadge variant="category">{product.category}</ProductBadge>
+                  </span>
                 </div>
-              )}
-            </>
-          )}
-        </div>
+                <div className="p-5 bg-white/[0.04]">
+                  <h3 className="font-semibold text-white text-lg leading-snug mb-2 line-clamp-2">
+                    {product.name}
+                  </h3>
+                  <p className="text-slate-200 text-sm leading-relaxed line-clamp-2 mb-4">
+                    {product.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {parseBadgeItems(product.activeIngredient).map((item, i) => (
+                      <ProductBadge key={`ing-${i}`} variant="ingredient">
+                        {item}
+                      </ProductBadge>
+                    ))}
+                    {parseBadgeItems(product.targetPests).map((item, i) => (
+                      <ProductBadge key={`pest-${i}`} variant="target">
+                        {item}
+                      </ProductBadge>
+                    ))}
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                    View product
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       <Footer />
+      </div>
     </div>
   );
 }

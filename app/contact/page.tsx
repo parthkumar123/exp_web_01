@@ -1,9 +1,12 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageBackgroundImage from "@/components/PageBackgroundImage";
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-emerald-900/30 to-zinc-900">
+    <div className="min-h-screen relative">
+      <PageBackgroundImage src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=1920&q=80" imageOpacity={0.18} />
+      <div className="relative z-10">
       <Navigation />
 
       {/* Hero Section */}
@@ -32,8 +35,8 @@ export default function ContactPage() {
             {/* Contact Info Cards - min-w-0 prevents truncation, flex for consistent height */}
 
             {/* Visit Us */}
-            <div className="min-w-0 flex flex-col backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all">
-              <div className="w-14 h-14 bg-gradient-to-br from-emerald-600/20 to-emerald-800/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6 shrink-0">
+            <div className="min-w-0 flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-8 hover:border-white/20 hover:bg-white/[0.06] transition-all">
+              <div className="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6 shrink-0">
                 <svg
                   className="w-7 h-7 text-emerald-400"
                   fill="none"
@@ -48,7 +51,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-light text-white mb-4">Visit Us</h3>
-              <p className="text-white/75 leading-relaxed font-light">
+              <p className="text-slate-200 leading-relaxed font-light">
                 Plot No. J-7832, GIDC Ind. Estate, Ankleshwar,
                 <br />
                 Gujarat, India - 393002
@@ -56,8 +59,8 @@ export default function ContactPage() {
             </div>
 
             {/* Call Us */}
-            <div className="min-w-0 flex flex-col backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all">
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-600/20 to-amber-800/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6 shrink-0">
+            <div className="min-w-0 flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-8 hover:border-white/20 hover:bg-white/[0.06] transition-all">
+              <div className="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6 shrink-0">
                 <svg
                   className="w-7 h-7 text-amber-400"
                   fill="none"
@@ -71,7 +74,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-light text-white mb-4">Call Us</h3>
-              <p className="text-white/75 font-light">
+              <p className="text-slate-200 font-light">
                 <a
                   href="tel:+916354914468"
                   className="hover:text-emerald-400 transition-colors"
@@ -82,8 +85,8 @@ export default function ContactPage() {
             </div>
 
             {/* Email Us */}
-            <div className="min-w-0 flex flex-col backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all">
-              <div className="w-14 h-14 bg-gradient-to-br from-blue-600/20 to-blue-800/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6 shrink-0">
+            <div className="min-w-0 flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-8 hover:border-white/20 hover:bg-white/[0.06] transition-all">
+              <div className="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6 shrink-0">
                 <svg
                   className="w-7 h-7 text-blue-400"
                   fill="none"
@@ -97,7 +100,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-light text-white mb-4">Email Us</h3>
-              <p className="text-white/75 font-light break-words">
+              <p className="text-slate-200 font-light break-words">
                 <a
                   href="mailto:sensoagrotech2909@gmail.com"
                   className="hover:text-emerald-400 transition-colors break-all"
@@ -108,8 +111,8 @@ export default function ContactPage() {
             </div>
 
             {/* WhatsApp */}
-            <div className="min-w-0 flex flex-col backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all">
-              <div className="w-14 h-14 bg-gradient-to-br from-green-600/20 to-green-800/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6 shrink-0">
+            <div className="min-w-0 flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-8 hover:border-white/20 hover:bg-white/[0.06] transition-all">
+              <div className="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6 shrink-0">
                 <svg
                   className="w-7 h-7 text-green-400"
                   viewBox="0 0 24 24"
@@ -119,7 +122,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-light text-white mb-4">WhatsApp</h3>
-              <p className="text-white/75 font-light mb-4 flex-1">
+              <p className="text-slate-200 font-light mb-4 flex-1">
                 Message us directly on WhatsApp
               </p>
               <a
@@ -136,8 +139,8 @@ export default function ContactPage() {
             </div>
 
             {/* Business Hours */}
-            <div className="min-w-0 flex flex-col backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 hover:border-emerald-400/50 hover:bg-gradient-to-br hover:from-white/15 hover:to-emerald-500/15 transition-all">
-              <div className="w-14 h-14 bg-gradient-to-br from-emerald-700/20 to-emerald-900/20 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6 shrink-0">
+            <div className="min-w-0 flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-8 hover:border-white/20 hover:bg-white/[0.06] transition-all">
+              <div className="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-xl flex items-center justify-center mb-6 shrink-0">
                 <svg
                   className="w-7 h-7 text-emerald-400"
                   fill="none"
@@ -153,7 +156,7 @@ export default function ContactPage() {
               <h3 className="text-xl font-light text-white mb-4">
                 Business Hours
               </h3>
-              <div className="space-y-1.5 text-white/75 font-light">
+              <div className="space-y-1.5 text-slate-200 font-light">
                 <p>Monday – Saturday</p>
                 <p className="font-normal text-white/90">9:00 AM – 6:00 PM</p>
                 <p className="text-amber-400/90 font-normal pt-1">Sunday: Closed</p>
@@ -164,28 +167,28 @@ export default function ContactPage() {
       </section>
 
       {/* Map Section */}
-      <section className="py-16 relative">
+      <section className="py-10 relative">
         <div className="max-w-7xl mx-auto px-8">
-          <div className="text-center mb-12">
-            <div className="inline-block px-4 py-1.5 mb-6 backdrop-blur-xl bg-white/5 border border-white/10 rounded-full">
+          <div className="text-center mb-6">
+            <div className="inline-block px-4 py-1.5 mb-4 backdrop-blur-xl bg-white/5 border border-white/10 rounded-full">
               <span className="text-xs font-medium text-white/70 tracking-[0.2em] uppercase">
                 Location
               </span>
             </div>
-            <h2 className="text-5xl font-extralight text-white mb-4 tracking-tight">
+            <h2 className="text-4xl font-extralight text-white mb-2 tracking-tight">
               Find Us on Map
             </h2>
-            <p className="text-white/60 font-light">
+            <p className="text-white/60 font-light text-sm">
               Visit our office and manufacturing facility
             </p>
           </div>
 
-          <div className="backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl overflow-hidden">
-            <div className="aspect-[16/9] flex items-center justify-center">
-              <div className="text-center p-12">
-                <div className="w-24 h-24 bg-gradient-to-br from-emerald-600/20 to-emerald-800/20 backdrop-blur-xl rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] overflow-hidden max-w-2xl mx-auto">
+            <div className="flex items-center justify-center py-8 px-6">
+              <div className="text-center">
+                <div className="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg
-                    className="w-12 h-12 text-emerald-400"
+                    className="w-7 h-7 text-emerald-400"
                     fill="none"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -197,17 +200,17 @@ export default function ContactPage() {
                     <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-light text-white mb-2">
+                <h3 className="text-lg font-medium text-white mb-1">
                   Google Maps Integration
                 </h3>
-                <p className="text-white/60 mb-6 font-light">
+                <p className="text-white/60 text-sm font-light mb-4">
                   Plot No. J-7832, GIDC Ind. Estate Ankleshwar, Gujarat 393002
                 </p>
                 <a
                   href="https://maps.app.goo.gl/nyyQ5grTsXvgb4bT7?g_st=aw"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-8 py-3 bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 text-emerald-300 font-medium rounded-lg hover:bg-emerald-500/30 transition-colors duration-300"
+                  className="inline-block px-6 py-2.5 text-sm bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 text-emerald-300 font-medium rounded-lg hover:bg-emerald-500/30 transition-colors duration-300"
                 >
                   Get Directions
                 </a>
@@ -218,6 +221,7 @@ export default function ContactPage() {
       </section>
 
       <Footer />
+      </div>
     </div>
   );
 }

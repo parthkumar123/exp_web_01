@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageBackgroundImage from "@/components/PageBackgroundImage";
 import { companyInfo } from "@/lib/companyData";
 import type { Metadata } from "next";
 
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-emerald-900/30 to-zinc-900">
+    <div className="min-h-screen relative">
+      <PageBackgroundImage imageOpacity={0.18} />
+      <div className="relative z-10">
       <Navigation />
 
       <section className="pt-32 pb-16 relative">
@@ -33,7 +36,7 @@ export default function TermsPage() {
 
       <section className="pb-20 relative">
         <div className="max-w-3xl mx-auto px-8">
-          <div className="backdrop-blur-2xl bg-white/5 border border-emerald-500/20 rounded-2xl p-8 md:p-12 space-y-8 text-white/80 font-light leading-relaxed">
+          <div className="rounded-2xl border border-slate-500/30 bg-gradient-to-br from-slate-700/90 to-emerald-900/40 p-8 md:p-12 space-y-8 text-slate-200 font-light leading-relaxed">
             <p>
               Welcome to the website of {companyInfo.fullName} (&quot;Senso
               Agrotech,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;).
@@ -129,7 +132,7 @@ export default function TermsPage() {
             </div>
 
             <div className="pt-4 border-t border-white/10">
-              <p className="text-white/90 font-medium">Contact</p>
+              <p className="text-slate-100 font-medium">Contact</p>
               <p className="mt-2">
                 For questions about these Terms of Service, please contact us at{" "}
                 <a
@@ -153,6 +156,7 @@ export default function TermsPage() {
       </section>
 
       <Footer />
+      </div>
     </div>
   );
 }

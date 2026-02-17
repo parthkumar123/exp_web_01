@@ -2,6 +2,7 @@
 
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageBackgroundImage from "@/components/PageBackgroundImage";
 
 export default function AboutPage() {
   const values = [
@@ -36,7 +37,9 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-emerald-900/30 to-zinc-900">
+    <div className="min-h-screen relative">
+      <PageBackgroundImage src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80" imageOpacity={0.18} />
+      <div className="relative z-10">
       <Navigation />
 
       {/* Hero Section */}
@@ -209,6 +212,7 @@ export default function AboutPage() {
       </section>
 
       <Footer />
+      </div>
     </div>
   );
 }
