@@ -176,6 +176,43 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Find us on IndiaMART */}
+      <section className="py-16 relative">
+        <div className="max-w-7xl mx-auto px-8">
+          <a
+            href="https://www.indiamart.com/senso-agrotech/profile.html?srsltid=AfmBOoofd5c6NyIF93DPBfVSNpeuZK4hJfyWDkTTu9WfISTjmc7MVU2d"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 p-8 backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl hover:border-emerald-400/50 hover:from-white/15 hover:to-emerald-500/15 transition-all duration-300 group"
+          >
+            <img
+              src="/indiamart.png"
+              alt="IndiaMART"
+              className="h-14 w-auto object-contain"
+            />
+            <div className="text-center sm:text-left">
+              <p className="text-white/60 text-sm font-medium tracking-[0.2em] uppercase mb-1">
+                Also find us on
+              </p>
+              <p className="text-xl font-light text-white group-hover:text-emerald-400 transition-colors">
+                IndiaMART
+              </p>
+            </div>
+            <svg
+              className="w-5 h-5 text-white/60 group-hover:text-emerald-400 transition-colors flex-shrink-0"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 relative">
         <div className="absolute inset-0 bg-gradient-radial from-emerald-500/20 via-transparent to-transparent" />
