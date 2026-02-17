@@ -60,8 +60,8 @@ export default function SitemapPage() {
         <div className="max-w-4xl mx-auto px-8">
           <div className="grid md:grid-cols-3 gap-10">
             {/* Main pages */}
-            <div className="rounded-2xl border border-slate-500/30 bg-gradient-to-br from-slate-700/90 to-emerald-900/40 p-6">
-              <h2 className="text-lg font-semibold text-white mb-4 border-b border-emerald-500/30 pb-2">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+              <h2 className="text-lg font-semibold text-white mb-4 border-b border-white/10 pb-2">
                 Main
               </h2>
               <ul className="space-y-2">
@@ -79,8 +79,8 @@ export default function SitemapPage() {
             </div>
 
             {/* Product categories */}
-            <div className="rounded-2xl border border-slate-500/30 bg-gradient-to-br from-slate-700/90 to-emerald-900/40 p-6">
-              <h2 className="text-lg font-semibold text-white mb-4 border-b border-emerald-500/30 pb-2">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+              <h2 className="text-lg font-semibold text-white mb-4 border-b border-white/10 pb-2">
                 Product Categories
               </h2>
               <ul className="space-y-2">
@@ -98,8 +98,8 @@ export default function SitemapPage() {
             </div>
 
             {/* Legal */}
-            <div className="rounded-2xl border border-slate-500/30 bg-gradient-to-br from-slate-700/90 to-emerald-900/40 p-6">
-              <h2 className="text-lg font-semibold text-white mb-4 border-b border-emerald-500/30 pb-2">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+              <h2 className="text-lg font-semibold text-white mb-4 border-b border-white/10 pb-2">
                 Legal &amp; Info
               </h2>
               <ul className="space-y-2">

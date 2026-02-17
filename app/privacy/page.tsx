@@ -36,7 +36,7 @@ export default function PrivacyPage() {
 
       <section className="pb-20 relative">
         <div className="max-w-3xl mx-auto px-8">
-          <div className="rounded-2xl border border-slate-500/30 bg-gradient-to-br from-slate-700/90 to-emerald-900/40 p-8 md:p-12 space-y-8 text-slate-200 font-light leading-relaxed">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-8 md:p-12 space-y-8 text-slate-200 font-light leading-relaxed">
             <p>
               {companyInfo.fullName} (&quot;Senso Agrotech,&quot; &quot;we,&quot;
               &quot;us,&quot; or &quot;our&quot;) is committed to protecting
