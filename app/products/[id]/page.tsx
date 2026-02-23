@@ -16,6 +16,7 @@ interface Product {
   image: string;
   description: string;
   activeIngredient: string;
+  targetPestsLabelType?: "target_pests" | "mode_of_action";
   targetPests: string[];
   applicableCrops: string[];
   dosage: string;
@@ -171,7 +172,11 @@ export default async function ProductDetailPage({
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
             <div className="grid sm:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-sm font-medium text-slate-400 mb-3">Target pests</h3>
+                <h3 className="text-sm font-medium text-slate-400 mb-3">
+                  {product.targetPestsLabelType === "mode_of_action"
+                    ? "Mode of Action"
+                    : "Target pests"}
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {parseBadgeItems(product.targetPests).map((item, idx) => (
                     <ProductBadge key={idx} variant="ingredient">

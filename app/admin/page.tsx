@@ -15,6 +15,7 @@ interface Product {
   image: string;
   description: string;
   activeIngredient: string;
+  targetPestsLabelType?: "target_pests" | "mode_of_action";
   targetPests: string[];
   applicableCrops: string[];
   dosage: string;
@@ -36,6 +37,7 @@ const initialProduct: Product = {
   image: "",
   description: "",
   activeIngredient: "",
+  targetPestsLabelType: "target_pests",
   targetPests: [],
   applicableCrops: [],
   dosage: "",
@@ -86,6 +88,7 @@ function AdminPanelContent() {
       if (data.success) {
         setFormData({
           ...data.data,
+          targetPestsLabelType: data.data.targetPestsLabelType ?? "target_pests",
           isActive: data.data.isActive ?? true,
           isFeatured: data.data.isFeatured ?? false,
         });
@@ -468,10 +471,33 @@ function AdminPanelContent() {
 
               {/* Array Fields */}
               <div className="grid md:grid-cols-2 gap-6">
-                {/* Target Pests */}
+                {/* Target Pests / Mode of Action */}
                 <div>
                   <label className="block text-sm font-semibold text-white/90 mb-2">
-                    Target Pests
+                    Section type
+                  </label>
+                  <select
+                    value={formData.targetPestsLabelType ?? "target_pests"}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        targetPestsLabelType: e.target
+                          .value as "target_pests" | "mode_of_action",
+                      })
+                    }
+                    className="w-full mb-3 px-4 py-2 bg-white/10 border border-emerald-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  >
+                    <option value="target_pests" className="bg-slate-800 text-white">
+                      Target Pests
+                    </option>
+                    <option value="mode_of_action" className="bg-slate-800 text-white">
+                      Mode of Action
+                    </option>
+                  </select>
+                  <label className="block text-sm font-semibold text-white/90 mb-2">
+                    {formData.targetPestsLabelType === "mode_of_action"
+                      ? "Mode of Action"
+                      : "Target Pests"}
                   </label>
                   <div className="flex gap-2 mb-2">
                     <input
@@ -484,7 +510,11 @@ function AdminPanelContent() {
                         })
                       }
                       className="flex-1 px-4 py-2 bg-white/10 border border-emerald-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Add pest"
+                      placeholder={
+                        formData.targetPestsLabelType === "mode_of_action"
+                          ? "Add mode of action"
+                          : "Add pest"
+                      }
                     />
                     <button
                       type="button"

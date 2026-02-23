@@ -8,6 +8,8 @@ export interface IProduct {
   image: string;
   description: string;
   activeIngredient: string;
+  /** When "mode_of_action", frontend shows "Mode of Action" instead of "Target Pests" */
+  targetPestsLabelType?: "target_pests" | "mode_of_action";
   targetPests: string[];
   applicableCrops: string[];
   dosage: string;
@@ -61,6 +63,11 @@ const ProductSchema = new Schema<IProduct>(
     activeIngredient: {
       type: String,
       required: [true, "Active ingredient is required"],
+    },
+    targetPestsLabelType: {
+      type: String,
+      enum: ["target_pests", "mode_of_action"],
+      default: "target_pests",
     },
     targetPests: {
       type: [String],

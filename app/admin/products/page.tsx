@@ -15,6 +15,7 @@ interface Product {
   image: string;
   description: string;
   activeIngredient: string;
+  targetPestsLabelType?: "target_pests" | "mode_of_action";
   targetPests: string[];
   applicableCrops: string[];
   dosage: string;
