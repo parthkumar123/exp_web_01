@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -54,9 +55,12 @@ export default function Navigation() {
               href="/"
               className="flex items-center group relative z-[10001]"
             >
-              <img
+              <Image
                 src="/logo.png"
                 alt="Senso Agrotech"
+                width={125}
+                height={73}
+                priority
                 className="h-[73px] w-auto object-contain group-hover:scale-105 transition-transform duration-300"
               />
             </Link>

@@ -45,10 +45,10 @@ export const metadata: Metadata = {
     siteName: "Senso Agrotech",
     images: [
       {
-        url: "/logo.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Senso Agrotech Logo",
+        alt: "Senso Agrotech — Protecting Crops, Empowering Farmers",
       },
     ],
   },
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     title: "Senso Agrotech - Protecting Crops, Empowering Farmers",
     description:
       "Premium crop protection solutions. 50+ Products. 10+ Years Excellence.",
-    images: ["/logo.png"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,

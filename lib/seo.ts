@@ -13,8 +13,8 @@ export const COMPANY_LEGAL_NAME = "Senso Agrotech Private Limited";
 export const SITE_DESCRIPTION =
   "Manufacturing excellence in crop protection solutions. Premium Insecticides, Fungicides, Herbicides & Plant Growth Regulators. Registered with CIB&RC, committed to sustainable agriculture.";
 
-/** Default Open Graph / Twitter share image (resolved against metadataBase). */
-export const DEFAULT_OG_IMAGE = "/logo.png";
+/** Default Open Graph / Twitter share image — 1200x630 banner (resolved against metadataBase). */
+export const DEFAULT_OG_IMAGE = "/og-image.png";
 
 /** Build an absolute URL from a site-relative path. */
 export function absoluteUrl(path = ""): string {

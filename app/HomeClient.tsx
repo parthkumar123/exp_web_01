@@ -592,7 +592,7 @@ export default function HomeClient({
                             decoding="async"
                             className="w-full h-full object-contain p-6"
                             onError={(e) => {
-                              e.currentTarget.src = "/placeholder-product.png";
+                              e.currentTarget.src = "/placeholder-product.svg";
                             }}
                           />
                         </div>

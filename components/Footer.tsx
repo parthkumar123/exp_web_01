@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Footer() {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
@@ -55,9 +56,11 @@ export default function Footer() {
           {/* Company Info */}
           <div className="space-y-6">
             <div className="flex items-center">
-              <img
+              <Image
                 src="/logo.png"
                 alt="Senso Agrotech"
+                width={132}
+                height={77}
                 className="h-[77px] w-auto object-contain"
               />
             </div>
