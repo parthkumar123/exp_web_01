@@ -12,19 +12,20 @@ export const companyInfo = {
   registrations: {
     cibrc: "Registered with CIB&RC",
     iso: "ISO 9001:2015 Certified",
-    gstin: "[To be added]",
+    gstin: "24AAVCS6963J1ZI",
   },
 
   // Contact Information
   contact: {
     address: {
-      line1: "Plot No. 123, Industrial Area",
-      city: "Gujarat",
+      line1: "Plot No. J-7832, GIDC Ind. Estate",
+      city: "Ankleshwar",
+      state: "Gujarat",
       country: "India",
-      pincode: "380001",
-      full: "Plot No. 123, Industrial Area, Gujarat, India - 380001",
+      pincode: "393002",
+      full: "Plot No. J-7832, GIDC Ind. Estate, Ankleshwar, Gujarat 393002, India",
     },
-    phone: "+91 98765 43210",
+    phone: "+91 63549 14468",
     whatsapp: "+916354914468", // same as contact page number, no spaces for wa.me link
     email: "sensoagrotech2909@gmail.com",
   },

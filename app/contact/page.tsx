@@ -1,6 +1,31 @@
+import type { Metadata } from "next";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
+import { SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
+
+const DESCRIPTION =
+  "Contact Senso Agrotech Private Limited — crop protection manufacturer in Ankleshwar, Gujarat. Call, email or message us on WhatsApp for product enquiries and quotes.";
+
+export const metadata: Metadata = {
+  title: "Contact Us | Senso Agrotech",
+  description: DESCRIPTION,
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    type: "website",
+    url: absoluteUrl("/contact"),
+    title: "Contact Us | Senso Agrotech",
+    description: DESCRIPTION,
+    siteName: SITE_NAME,
+    images: [DEFAULT_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Us | Senso Agrotech",
+    description: DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
+  },
+};
 
 export default function ContactPage() {
   return (

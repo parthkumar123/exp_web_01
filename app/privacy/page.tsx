@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy | Senso Agrotech",
   description:
     "Privacy Policy for Senso Agrotech Private Limited. Learn how we collect, use, and protect your information.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

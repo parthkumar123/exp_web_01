@@ -1,8 +1,31 @@
-"use client";
-
+import type { Metadata } from "next";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
+import { SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
+
+const DESCRIPTION =
+  "Senso Agrotech Pvt. Ltd. is one of India's leading manufacturers of crop protection products — Insecticides, Fungicides, Herbicides, PGRs and fertilizers — with over a decade of ISO 9001:2015 certified manufacturing excellence.";
+
+export const metadata: Metadata = {
+  title: "About Us | Senso Agrotech",
+  description: DESCRIPTION,
+  alternates: { canonical: "/about" },
+  openGraph: {
+    type: "website",
+    url: absoluteUrl("/about"),
+    title: "About Us | Senso Agrotech",
+    description: DESCRIPTION,
+    siteName: SITE_NAME,
+    images: [DEFAULT_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Us | Senso Agrotech",
+    description: DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
+  },
+};
 
 export default function AboutPage() {
   const values = [
@@ -188,6 +211,8 @@ export default function AboutPage() {
             <img
               src="/indiamart.png"
               alt="IndiaMART"
+              loading="lazy"
+              decoding="async"
               className="h-14 w-auto object-contain"
             />
             <div className="text-center sm:text-left">

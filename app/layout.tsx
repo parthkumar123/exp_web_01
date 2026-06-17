@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import { SITE_URL } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Senso Agrotech - Protecting Crops, Empowering Farmers",
   description:
     "Manufacturing excellence in crop protection solutions. Premium Insecticides, Fungicides, Herbicides & Plant Growth Regulators. Registered with CIB&RC, committed to sustainable agriculture.",
@@ -31,10 +33,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Senso Agrotech Private Limited" }],
   creator: "Senso Agrotech Private Limited",
   publisher: "Senso Agrotech Private Limited",
-  icons: {
-    icon: [{ url: "/logo.png", sizes: "any", type: "image/png" }],
-    apple: [{ url: "/logo.png", sizes: "180x180", type: "image/png" }],
-  },
+  // Favicon / app icons are provided by the file-based app/favicon.ico,
+  // app/icon.png and app/apple-icon.png (proper square assets).
   openGraph: {
     type: "website",
     locale: "en_IN",

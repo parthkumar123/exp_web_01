@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Terms of Service | Senso Agrotech",
   description:
     "Terms of Service for Senso Agrotech Private Limited. Read our terms governing use of our website and services.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {

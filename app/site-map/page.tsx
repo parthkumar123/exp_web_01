@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Sitemap | Senso Agrotech",
   description:
     "Sitemap of Senso Agrotech website. Find all main pages and product categories.",
+  alternates: { canonical: "/site-map" },
 };
 
 const mainPages = [

@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { cache } from "react";
+import type { Metadata } from "next";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -7,6 +9,8 @@ import ProductModel from "@/models/Product";
 import ProductDetailStickyBar from "@/components/ProductDetailStickyBar";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
 import { ProductBadge, parseBadgeItems } from "@/components/ProductBadge";
+import JsonLd from "@/components/JsonLd";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, absoluteUrl } from "@/lib/seo";
 
 interface Product {
   _id: string;
@@ -30,7 +34,8 @@ interface Product {
   isActive: boolean;
 }
 
-async function getProduct(slug: string): Promise<Product | null> {
+// Cached so generateMetadata and the page share a single DB query per request.
+const getProduct = cache(async (slug: string): Promise<Product | null> => {
   try {
     await connectDB();
     const product = await ProductModel.findOne({ slug, isActive: true }).lean();
@@ -39,6 +44,56 @@ async function getProduct(slug: string): Promise<Product | null> {
     console.error("Error fetching product:", error);
     return null;
   }
+});
+
+function truncate(text: string, max = 160): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  return clean.length > max ? `${clean.slice(0, max - 1).trimEnd()}…` : clean;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const product = await getProduct(id);
+
+  if (!product) {
+    return {
+      title: `Product not found | ${SITE_NAME}`,
+      robots: { index: false, follow: true },
+    };
+  }
+
+  const title = `${product.name} | ${SITE_NAME}`;
+  const description = truncate(
+    product.description || product.aboutProduct || SITE_DESCRIPTION
+  );
+  const canonical = `/products/${product.slug}`;
+  const images = product.image
+    ? [{ url: product.image, alt: product.name }]
+    : undefined;
+
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      type: "website",
+      url: absoluteUrl(canonical),
+      title,
+      description,
+      siteName: SITE_NAME,
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: product.image ? [product.image] : undefined,
+    },
+  };
 }
 
 async function getRelatedProducts(
@@ -74,8 +129,42 @@ export default async function ProductDetailPage({
 
   const relatedProducts = await getRelatedProducts(product.category, product._id);
 
+  const canonical = absoluteUrl(`/products/${product.slug}`);
+  const productSchema = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    name: product.name,
+    image: product.image ? [product.image] : undefined,
+    description: product.description || product.aboutProduct || undefined,
+    category: product.category,
+    url: canonical,
+    brand: { "@type": "Brand", name: SITE_NAME },
+    manufacturer: { "@type": "Organization", name: "Senso Agrotech Private Limited" },
+    ...(product.activeIngredient
+      ? {
+          additionalProperty: [
+            {
+              "@type": "PropertyValue",
+              name: "Active Ingredient",
+              value: product.activeIngredient,
+            },
+          ],
+        }
+      : {}),
+  };
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Products", item: absoluteUrl("/products") },
+      { "@type": "ListItem", position: 3, name: product.name, item: canonical },
+    ],
+  };
+
   return (
     <div className="min-h-screen relative">
+      <JsonLd data={[productSchema, breadcrumbSchema]} />
       <PageBackgroundImage />
       <div className="relative z-10">
       <Navigation />
@@ -294,6 +383,8 @@ export default async function ProductDetailPage({
                     <img
                       src={p.image}
                       alt={p.name}
+                      loading="lazy"
+                      decoding="async"
                       className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform"
                     />
                   </div>
