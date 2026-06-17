@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import { SITE_URL } from "@/lib/seo";
+
+// Google Analytics 4 measurement id (e.g. "G-XXXXXXXXXX") and Google Search
+// Console verification token. Both are injected only when the env var is set,
+// so local/dev builds stay clean. See .env.example.
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GSC_VERIFICATION = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,10 +45,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://sensoagrotech.com",
+    url: SITE_URL,
     title: "Senso Agrotech - Protecting Crops, Empowering Farmers",
     description:
-      "Manufacturing excellence in crop protection solutions. Trusted by 10K+ farmers nationwide.",
+      "Manufacturing excellence in crop protection solutions. Trusted by 25,000+ farmers nationwide.",
     siteName: "Senso Agrotech",
     images: [
       {
@@ -56,7 +63,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Senso Agrotech - Protecting Crops, Empowering Farmers",
     description:
-      "Premium crop protection solutions. 50+ Products. 10+ Years Excellence.",
+      "Premium crop protection solutions. 150+ Products. 10+ Years Excellence.",
     images: ["/og-image.png"],
   },
   robots: {
@@ -70,6 +77,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  ...(GSC_VERIFICATION ? { verification: { google: GSC_VERIFICATION } } : {}),
 };
 
 export default function RootLayout({
@@ -78,12 +86,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en-IN">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
         <FloatingWhatsApp />
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

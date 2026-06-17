@@ -40,12 +40,12 @@ export default function Footer() {
   ];
 
   const productCategories = [
-    { name: "Insecticides", url: "/products" },
-    { name: "Fungicides", url: "/products" },
-    { name: "Herbicides", url: "/products" },
-    { name: "Plant Growth Regulators", url: "/products" },
-    { name: "Biological", url: "/products" },
-    { name: "Fertilizers", url: "/products" },
+    { name: "Insecticides", url: "/products?category=Insecticides" },
+    { name: "Fungicides", url: "/products?category=Fungicides" },
+    { name: "Herbicides", url: "/products?category=Herbicides" },
+    { name: "Plant Growth Regulators", url: "/products?category=PGR" },
+    { name: "Biological", url: "/products?category=Biological" },
+    { name: "Fertilizers", url: "/products?category=Fertilizers" },
   ];
 
   return (

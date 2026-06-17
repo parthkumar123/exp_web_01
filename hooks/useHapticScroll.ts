@@ -19,6 +19,7 @@ export const useHapticScroll = (config: HapticScrollConfig = {}) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time mount flag so the client-only ScrollTrigger setup below runs after hydration
     setMounted(true);
   }, []);
 

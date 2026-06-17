@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
-import { SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl, localBusinessSchema } from "@/lib/seo";
 
 const DESCRIPTION =
   "Contact Senso Agrotech Private Limited — crop protection manufacturer in Ankleshwar, Gujarat. Call, email or message us on WhatsApp for product enquiries and quotes.";
@@ -30,6 +31,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="min-h-screen relative">
+      <JsonLd data={localBusinessSchema} />
       <PageBackgroundImage src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=1920&q=80" imageOpacity={0.18} />
       <div className="relative z-10">
       <Navigation />

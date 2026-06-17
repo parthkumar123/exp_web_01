@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -27,8 +27,18 @@ export default function ProductsClient({
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
+  // Honor a ?category= deep link (from the footer / sitemap page). Read after
+  // mount so the page stays statically rendered. Ignores unknown values.
+  useEffect(() => {
+    const cat = new URLSearchParams(window.location.search).get("category");
+    if (cat && CATEGORIES.some((c) => c.id === cat)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: sync filter from URL once after mount, avoids a hydration mismatch on the initial render
+      setActiveCategory(cat);
+    }
+  }, []);
+
   const filteredProducts = useMemo(() => {
-    let list =
+    const list =
       activeCategory === "All"
         ? products
         : products.filter((p) => p.category === activeCategory);

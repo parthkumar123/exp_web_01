@@ -8,23 +8,51 @@ import Link from "next/link";
 import { cloudinaryAuto } from "@/lib/cloudinaryUrl";
 import type { ProductListItem } from "@/lib/products";
 
+// Per-category styling. These are FULL, literal class strings (not built at
+// runtime) so Tailwind's compiler can see and generate them — interpolating
+// `from-${color}-600/20` silently produces no CSS.
+type CategoryStyle = { gradient: string; badge: string; badgeText: string };
+
+const CATEGORY_STYLES: Record<string, CategoryStyle> = {
+  Insecticides: {
+    gradient: "from-emerald-600/20 to-emerald-800/20",
+    badge: "bg-emerald-500/20 border-emerald-500/30",
+    badgeText: "text-emerald-300",
+  },
+  Fungicides: {
+    gradient: "from-blue-600/20 to-blue-800/20",
+    badge: "bg-blue-500/20 border-blue-500/30",
+    badgeText: "text-blue-300",
+  },
+  Herbicides: {
+    gradient: "from-amber-600/20 to-amber-800/20",
+    badge: "bg-amber-500/20 border-amber-500/30",
+    badgeText: "text-amber-300",
+  },
+  PGR: {
+    gradient: "from-green-600/20 to-green-800/20",
+    badge: "bg-green-500/20 border-green-500/30",
+    badgeText: "text-green-300",
+  },
+  Fertilizers: {
+    gradient: "from-purple-600/20 to-purple-800/20",
+    badge: "bg-purple-500/20 border-purple-500/30",
+    badgeText: "text-purple-300",
+  },
+  Biological: {
+    gradient: "from-teal-600/20 to-teal-800/20",
+    badge: "bg-teal-500/20 border-teal-500/30",
+    badgeText: "text-teal-300",
+  },
+};
+
+const DEFAULT_CATEGORY_STYLE = CATEGORY_STYLES.Insecticides;
+
 export default function HomeClient({
   featuredProducts,
 }: {
   featuredProducts: ProductListItem[];
 }) {
-  const getCategoryColor = (category: string) => {
-    const colors: { [key: string]: string } = {
-      Insecticides: "emerald",
-      Fungicides: "blue",
-      Herbicides: "amber",
-      PGR: "green",
-      Fertilizers: "purple",
-      Biological: "teal",
-    };
-    return colors[category] || "emerald";
-  };
-
   return (
     <DayNightProvider>
       <div className="relative bg-gradient-to-br from-zinc-950 via-emerald-950/20 to-zinc-950">
@@ -58,10 +86,14 @@ export default function HomeClient({
                 <span className="font-light bg-gradient-to-r from-emerald-400 via-emerald-300 to-white bg-clip-text text-transparent">
                   Happiness
                 </span>
+                <span className="block mt-6 text-lg md:text-2xl font-light tracking-normal leading-snug text-white/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.65)]">
+                  India&apos;s trusted crop protection &amp; agrochemical manufacturer
+                </span>
               </h1>
 
-              <p className="text-xl md:text-2xl text-white/50 font-light max-w-3xl mx-auto">
-                One of India's leading formulators of agrochemicals
+              <p className="text-base md:text-xl text-white/85 font-light max-w-3xl mx-auto drop-shadow-[0_1px_8px_rgba(0,0,0,0.65)]">
+                Insecticides, fungicides, herbicides &amp; plant growth
+                regulators - trusted by farmers across India.
               </p>
 
               <div className="flex flex-col items-center gap-8 mt-16">
@@ -346,7 +378,7 @@ export default function HomeClient({
 
                   <div className="space-y-4 text-white/60 text-base md:text-lg font-light leading-relaxed">
                     <p>
-                      Environmental protection is not optional—it's our{" "}
+                      Environmental protection is not optional—it&apos;s our{" "}
                       <span className="text-white/90 font-normal">
                         core responsibility
                       </span>
@@ -567,7 +599,9 @@ export default function HomeClient({
               {featuredProducts.length > 0 ? (
                 <div className="grid md:grid-cols-3 gap-8">
                   {featuredProducts.map((product) => {
-                    const color = getCategoryColor(product.category);
+                    const style =
+                      CATEGORY_STYLES[product.category] ??
+                      DEFAULT_CATEGORY_STYLE;
                     return (
                       <Link
                         key={product._id}
@@ -575,13 +609,13 @@ export default function HomeClient({
                         className="group backdrop-blur-2xl bg-gradient-to-br from-white/5 to-emerald-500/5 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all duration-500 hover:scale-105"
                       >
                         <div
-                          className={`h-48 bg-gradient-to-br from-${color}-600/20 to-${color}-800/20 flex items-center justify-center relative overflow-hidden`}
+                          className={`h-48 bg-gradient-to-br ${style.gradient} flex items-center justify-center relative overflow-hidden`}
                         >
                           <div
-                            className={`absolute top-4 right-4 px-3 py-1 bg-${color}-500/20 backdrop-blur-xl border border-${color}-500/30 rounded-full`}
+                            className={`absolute top-4 right-4 px-3 py-1 border ${style.badge} backdrop-blur-xl rounded-full`}
                           >
                             <span
-                              className={`text-xs text-${color}-300 font-medium`}
+                              className={`text-xs ${style.badgeText} font-medium`}
                             >
                               {product.category}
                             </span>

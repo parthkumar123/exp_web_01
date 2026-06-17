@@ -143,27 +143,43 @@ export default async function ProductDetailPage({
   const relatedProducts = await getRelatedProducts(product.category, product._id);
 
   const canonical = absoluteUrl(`/products/${product.slug}`);
+
+  // Spec sheet as schema.org PropertyValues. No `offers` block: these are
+  // quote-based B2B products with no public price, and inventing one would be
+  // misleading (and against Google's structured-data guidelines).
+  const additionalProperty = [
+    product.activeIngredient && {
+      "@type": "PropertyValue",
+      name: "Active Ingredient",
+      value: product.activeIngredient,
+    },
+    product.applicableCrops?.length > 0 && {
+      "@type": "PropertyValue",
+      name: "Applicable Crops",
+      value: product.applicableCrops.join(", "),
+    },
+    product.packSizes?.length > 0 && {
+      "@type": "PropertyValue",
+      name: "Pack Sizes",
+      value: product.packSizes.join(", "),
+    },
+  ].filter(Boolean);
+
   const productSchema = {
     "@context": "https://schema.org/",
     "@type": "Product",
     name: product.name,
+    sku: product.slug,
     image: product.image ? [product.image] : undefined,
     description: product.description || product.aboutProduct || undefined,
     category: product.category,
     url: canonical,
     brand: { "@type": "Brand", name: SITE_NAME },
-    manufacturer: { "@type": "Organization", name: "Senso Agrotech Private Limited" },
-    ...(product.activeIngredient
-      ? {
-          additionalProperty: [
-            {
-              "@type": "PropertyValue",
-              name: "Active Ingredient",
-              value: product.activeIngredient,
-            },
-          ],
-        }
-      : {}),
+    manufacturer: {
+      "@type": "Organization",
+      name: "Senso Agrotech Private Limited",
+    },
+    ...(additionalProperty.length > 0 ? { additionalProperty } : {}),
   };
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -211,6 +227,8 @@ export default async function ProductDetailPage({
             <img
               src={cloudinaryAuto(product.image, 1200)}
               alt={product.name}
+              fetchPriority="high"
+              decoding="async"
               className="max-h-[340px] w-auto object-contain"
             />
           </div>

@@ -22,10 +22,14 @@ export async function GET(
     }
 
     return NextResponse.json({ success: true, data: product });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching product:", error);
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to fetch product" },
+      {
+        success: false,
+        error:
+          error instanceof Error ? error.message : "Failed to fetch product",
+      },
       { status: 500 }
     );
   }
@@ -57,10 +61,14 @@ export async function PUT(
     revalidateProductPaths(product.slug);
 
     return NextResponse.json({ success: true, data: product });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating product:", error);
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to update product" },
+      {
+        success: false,
+        error:
+          error instanceof Error ? error.message : "Failed to update product",
+      },
       { status: 500 }
     );
   }
@@ -90,10 +98,14 @@ export async function DELETE(
       success: true,
       message: "Product deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting product:", error);
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to delete product" },
+      {
+        success: false,
+        error:
+          error instanceof Error ? error.message : "Failed to delete product",
+      },
       { status: 500 }
     );
   }

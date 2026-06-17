@@ -28,6 +28,21 @@ const SOCIAL_PROFILES = [
   "https://www.indiamart.com/senso-agrotech/profile.html",
 ];
 
+/** Public Google Maps link for the manufacturing facility. */
+export const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/nyyQ5grTsXvgb4bT7";
+
+/** Single source of truth for NAP — shared by Organization + LocalBusiness. */
+const TELEPHONE = "+91-63549-14468";
+const EMAIL = "sensoagrotech2909@gmail.com";
+const POSTAL_ADDRESS = {
+  "@type": "PostalAddress",
+  streetAddress: "Plot No. J-7832, GIDC Ind. Estate",
+  addressLocality: "Ankleshwar",
+  addressRegion: "Gujarat",
+  postalCode: "393002",
+  addressCountry: "IN",
+} as const;
+
 /** Organization schema — emitted on the homepage. */
 export const organizationSchema = {
   "@context": "https://schema.org",
@@ -38,16 +53,48 @@ export const organizationSchema = {
   logo: absoluteUrl("/logo.png"),
   image: absoluteUrl("/logo.png"),
   description: SITE_DESCRIPTION,
-  email: "sensoagrotech2909@gmail.com",
-  telephone: "+91-63549-14468",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Plot No. J-7832, GIDC Ind. Estate",
-    addressLocality: "Ankleshwar",
-    addressRegion: "Gujarat",
-    postalCode: "393002",
-    addressCountry: "IN",
-  },
+  email: EMAIL,
+  telephone: TELEPHONE,
+  address: POSTAL_ADDRESS,
+  sameAs: SOCIAL_PROFILES,
+} as const;
+
+/**
+ * LocalBusiness schema — emitted on the contact page. Strengthens local SEO
+ * ("agrochemical manufacturer in Ankleshwar / Gujarat") and feeds the Google
+ * knowledge panel. NAP matches the footer/contact page exactly.
+ * NOTE: no `geo` lat/long is included to avoid guessing coordinates — add the
+ * facility's exact lat/long here when known for an extra local-SEO signal.
+ */
+export const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": `${SITE_URL}/#localbusiness`,
+  name: COMPANY_LEGAL_NAME,
+  alternateName: SITE_NAME,
+  url: SITE_URL,
+  logo: absoluteUrl("/logo.png"),
+  image: absoluteUrl(DEFAULT_OG_IMAGE),
+  description: SITE_DESCRIPTION,
+  email: EMAIL,
+  telephone: TELEPHONE,
+  address: POSTAL_ADDRESS,
+  hasMap: GOOGLE_MAPS_URL,
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ],
+      opens: "09:00",
+      closes: "18:00",
+    },
+  ],
   sameAs: SOCIAL_PROFILES,
 } as const;
 
