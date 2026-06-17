@@ -4,7 +4,9 @@ import JsonLd from "@/components/JsonLd";
 import { getFeaturedProducts } from "@/lib/products";
 import { organizationSchema, websiteSchema } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// ISR: cached and regenerated hourly; product mutations trigger on-demand
+// revalidation (see lib/revalidate.ts) so featured products stay fresh.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },

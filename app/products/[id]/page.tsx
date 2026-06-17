@@ -11,6 +11,19 @@ import PageBackgroundImage from "@/components/PageBackgroundImage";
 import { ProductBadge, parseBadgeItems } from "@/components/ProductBadge";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, absoluteUrl } from "@/lib/seo";
+import { cloudinaryAuto } from "@/lib/cloudinaryUrl";
+import { getProductSlugs } from "@/lib/products";
+
+// Cache pages and regenerate at most hourly (on-demand revalidation on product
+// create/update/delete keeps them fresh in between).
+export const revalidate = 3600;
+
+// Pre-render every active product page at build time (Vercel build has DB access).
+// New products created after a build are rendered on demand and then cached.
+export async function generateStaticParams() {
+  const products = await getProductSlugs();
+  return products.map((p) => ({ id: p.slug }));
+}
 
 interface Product {
   _id: string;
@@ -196,7 +209,7 @@ export default async function ProductDetailPage({
         <section className="grid lg:grid-cols-2 gap-10 lg:gap-14 mb-16">
           <div className="relative rounded-2xl overflow-hidden bg-white/[0.03] border border-white/10 flex items-center justify-center min-h-[320px] p-8">
             <img
-              src={product.image}
+              src={cloudinaryAuto(product.image, 1200)}
               alt={product.name}
               className="max-h-[340px] w-auto object-contain"
             />
@@ -381,7 +394,7 @@ export default async function ProductDetailPage({
                 >
                   <div className="h-40 flex items-center justify-center p-4 bg-white/[0.03]">
                     <img
-                      src={p.image}
+                      src={cloudinaryAuto(p.image, 500)}
                       alt={p.name}
                       loading="lazy"
                       decoding="async"

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
+import { revalidateProductPaths } from "@/lib/revalidate";
 
 // GET single product by ID
 export async function GET(
@@ -53,6 +54,8 @@ export async function PUT(
       );
     }
 
+    revalidateProductPaths(product.slug);
+
     return NextResponse.json({ success: true, data: product });
   } catch (error: any) {
     console.error("Error updating product:", error);
@@ -80,6 +83,8 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
+    revalidateProductPaths(product.slug);
 
     return NextResponse.json({
       success: true,

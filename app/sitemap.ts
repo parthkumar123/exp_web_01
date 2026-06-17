@@ -2,7 +2,8 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo";
 import { getProductSlugs } from "@/lib/products";
 
-export const dynamic = "force-dynamic";
+// ISR: regenerated hourly and on product create/delete via on-demand revalidation.
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();

@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
 import { ProductBadge, parseBadgeItems } from "@/components/ProductBadge";
+import { cloudinaryAuto } from "@/lib/cloudinaryUrl";
 import type { ProductListItem } from "@/lib/products";
 
 const CATEGORIES = [
@@ -150,7 +151,7 @@ export default function ProductsClient({
               >
                 <div className="relative h-52 bg-white/[0.03] flex items-center justify-center p-6">
                   <img
-                    src={product.image}
+                    src={cloudinaryAuto(product.image, 700)}
                     alt={product.name}
                     loading="lazy"
                     decoding="async"

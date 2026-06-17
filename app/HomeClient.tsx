@@ -5,6 +5,7 @@ import { DayNightProvider } from "@/components/DayNightToggle";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
+import { cloudinaryAuto } from "@/lib/cloudinaryUrl";
 import type { ProductListItem } from "@/lib/products";
 
 export default function HomeClient({
@@ -586,7 +587,7 @@ export default function HomeClient({
                             </span>
                           </div>
                           <img
-                            src={product.image}
+                            src={cloudinaryAuto(product.image, 800)}
                             alt={product.name}
                             loading="lazy"
                             decoding="async"

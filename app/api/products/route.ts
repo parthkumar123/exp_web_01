@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
+import { revalidateProductPaths } from "@/lib/revalidate";
 
 // GET all products or filter by category
 export async function GET(request: NextRequest) {
@@ -71,6 +72,8 @@ export async function POST(request: NextRequest) {
     }
 
     const product = await Product.create(body);
+
+    revalidateProductPaths(product.slug);
 
     return NextResponse.json({ success: true, data: product }, { status: 201 });
   } catch (error: unknown) {

@@ -4,7 +4,9 @@ import JsonLd from "@/components/JsonLd";
 import { getAllProducts } from "@/lib/products";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// ISR: cached and regenerated hourly; product mutations trigger on-demand
+// revalidation (see lib/revalidate.ts) so the catalogue stays fresh.
+export const revalidate = 3600;
 
 const DESCRIPTION =
   "Browse Senso Agrotech's crop protection catalogue — Insecticides, Fungicides, Herbicides, Plant Growth Regulators, Fertilizers and Biologicals for higher yields.";
