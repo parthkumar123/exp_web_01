@@ -260,6 +260,18 @@ export default function Footer() {
               </a>
             </div>
           </div>
+
+          <p className="mt-4 text-center text-xs text-white/40">
+            Designed, developed &amp; marketed by{" "}
+            <a
+              href="https://vanceiq.com"
+              target="_blank"
+              rel="noopener sponsored"
+              className="text-white/60 hover:text-emerald-400 transition-colors duration-300"
+            >
+              VanceIQ
+            </a>
+          </p>
         </div>
       </div>
 
