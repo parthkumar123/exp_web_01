@@ -5,7 +5,7 @@ import PageBackgroundImage from "@/components/PageBackgroundImage";
 import { SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
 
 const DESCRIPTION =
-  "Senso Agrotech Pvt. Ltd. is one of India's leading manufacturers of crop protection products — Insecticides, Fungicides, Herbicides, PGRs and fertilizers — with over a decade of ISO 9001:2015 certified manufacturing excellence.";
+  "Senso Agrotech Private Limited is one of India's leading manufacturers of crop protection products — Insecticides, Fungicides, Herbicides, PGRs and fertilizers — with over a decade of ISO 9001:2015 certified manufacturing excellence.";
 
 export const metadata: Metadata = {
   title: "About Us | Senso Agrotech",
@@ -135,22 +135,22 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-6 text-white/75 leading-relaxed font-light">
                 <p>
-                  Senso Agrotech Pvt. Ltd. had started as a small scale unit for
+                  Senso Agrotech Private Limited had started as a small scale unit for
                   the manufacturing of crop protection chemical almost one
                   decade ago. By Acquisition, backward and forward integration,
-                  Senso Agrotech Pvt. Ltd. now has become one of the leading
+                  Senso Agrotech Private Limited now has become one of the leading
                   manufacturers of wide range of products- Insecticides,
                   Fungicides, Herbicides, Micro Fertilizers, Plant Growth
                   Regulators and Soil Plant Health Products.
                 </p>
                 <p>
-                  Senso Agrotech Pvt. Ltd. believes in the strategy of
+                  Senso Agrotech Private Limited believes in the strategy of
                   continuous expansion and development of high value and branded
                   products with thrust on registration and marketing according
                   to customer requirement.
                 </p>
                 <p>
-                  Senso Agrotech Pvt. Ltd. has manufacturing units located at
+                  Senso Agrotech Private Limited has manufacturing units located at
                   Ankleshwer in Gujarat. It runs on world class technologies and
                   quality services. Company focused on quality to serve its
                   customers. Each stage of production from raw material to
@@ -165,7 +165,7 @@ export default function AboutPage() {
                   expand its portfolio.
                 </p>
                 <p>
-                  The aim of Senso Agrotech Pvt. Ltd. is to build strong
+                  The aim of Senso Agrotech Private Limited is to build strong
                   relationship with customers to understand their needs and
                   deliver real performance in term of usage.
                 </p>
