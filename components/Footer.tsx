@@ -101,9 +101,9 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">
+            <h2 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">
               Quick Links
-            </h4>
+            </h2>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
@@ -128,9 +128,9 @@ export default function Footer() {
 
           {/* Product Categories */}
           <div>
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">
+            <h2 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">
               Product Categories
-            </h4>
+            </h2>
             <ul className="space-y-3">
               {productCategories.map((category) => (
                 <li key={category.name}>
@@ -156,9 +156,9 @@ export default function Footer() {
 
           {/* Contact Us */}
           <div>
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">
+            <h2 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">
               Contact Us
-            </h4>
+            </h2>
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-sm">
                 <svg
