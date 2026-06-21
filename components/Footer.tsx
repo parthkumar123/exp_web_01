@@ -212,10 +212,10 @@ export default function Footer() {
                   <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 <a
-                  href="mailto:sensoagrotech2909@gmail.com"
+                  href="mailto:sales@sensoagrotech.com"
                   className="text-white/60 hover:text-emerald-400 transition-colors duration-300"
                 >
-                  sensoagrotech2909@gmail.com
+                  sales@sensoagrotech.com
                 </a>
               </li>
             </ul>

@@ -27,7 +27,7 @@ export const companyInfo = {
     },
     phone: "+91 63549 14468",
     whatsapp: "+916354914468", // same as contact page number, no spaces for wa.me link
-    email: "sensoagrotech2909@gmail.com",
+    email: "sales@sensoagrotech.com",
   },
 
   // Company Stats

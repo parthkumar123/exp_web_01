@@ -33,7 +33,7 @@ export const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/nyyQ5grTsXvgb4bT7";
 
 /** Single source of truth for NAP — shared by Organization + LocalBusiness. */
 const TELEPHONE = "+91-63549-14468";
-const EMAIL = "sensoagrotech2909@gmail.com";
+const EMAIL = "sales@sensoagrotech.com";
 const POSTAL_ADDRESS = {
   "@type": "PostalAddress",
   streetAddress: "Plot No. J-7832, GIDC Ind. Estate",

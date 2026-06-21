@@ -129,10 +129,10 @@ export default function ContactPage() {
               <h3 className="text-xl font-light text-white mb-4">Email Us</h3>
               <p className="text-slate-200 font-light break-words">
                 <a
-                  href="mailto:sensoagrotech2909@gmail.com"
+                  href="mailto:sales@sensoagrotech.com"
                   className="hover:text-emerald-400 transition-colors break-all"
                 >
-                  sensoagrotech2909@gmail.com
+                  sales@sensoagrotech.com
                 </a>
               </p>
             </div>
