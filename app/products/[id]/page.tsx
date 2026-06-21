@@ -10,9 +10,10 @@ import ProductDetailStickyBar from "@/components/ProductDetailStickyBar";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
 import { ProductBadge, parseBadgeItems } from "@/components/ProductBadge";
 import JsonLd from "@/components/JsonLd";
-import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, absoluteUrl } from "@/lib/seo";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, absoluteUrl, buildProductSchema } from "@/lib/seo";
 import { cloudinaryAuto } from "@/lib/cloudinaryUrl";
 import { getProductSlugs } from "@/lib/products";
+import { formatPrice } from "@/lib/price";
 
 // Cache pages and regenerate at most hourly (on-demand revalidation on product
 // create/update/delete keeps them fresh in between).
@@ -44,6 +45,9 @@ interface Product {
   aboutProduct: string;
   safetyInformation: string[];
   safetyNote: string;
+  priceMin?: number | null;
+  priceMax?: number | null;
+  currency?: string;
   isActive: boolean;
 }
 
@@ -51,7 +55,11 @@ interface Product {
 const getProduct = cache(async (slug: string): Promise<Product | null> => {
   try {
     await connectDB();
-    const product = await ProductModel.findOne({ slug, isActive: true }).lean();
+    const product = await ProductModel.findOne({
+      slug,
+      isActive: true,
+      productType: { $nin: ["technical", "solvent"] },
+    }).lean();
     return product ? (product as unknown as Product) : null;
   } catch (error) {
     console.error("Error fetching product:", error);
@@ -144,43 +152,13 @@ export default async function ProductDetailPage({
 
   const canonical = absoluteUrl(`/products/${product.slug}`);
 
-  // Spec sheet as schema.org PropertyValues. No `offers` block: these are
-  // quote-based B2B products with no public price, and inventing one would be
-  // misleading (and against Google's structured-data guidelines).
-  const additionalProperty = [
-    product.activeIngredient && {
-      "@type": "PropertyValue",
-      name: "Active Ingredient",
-      value: product.activeIngredient,
-    },
-    product.applicableCrops?.length > 0 && {
-      "@type": "PropertyValue",
-      name: "Applicable Crops",
-      value: product.applicableCrops.join(", "),
-    },
-    product.packSizes?.length > 0 && {
-      "@type": "PropertyValue",
-      name: "Pack Sizes",
-      value: product.packSizes.join(", "),
-    },
-  ].filter(Boolean);
+  const price = formatPrice(product);
 
-  const productSchema = {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    name: product.name,
-    sku: product.slug,
-    image: product.image ? [product.image] : undefined,
-    description: product.description || product.aboutProduct || undefined,
-    category: product.category,
-    url: canonical,
-    brand: { "@type": "Brand", name: SITE_NAME },
-    manufacturer: {
-      "@type": "Organization",
-      name: "Senso Agrotech Private Limited",
-    },
-    ...(additionalProperty.length > 0 ? { additionalProperty } : {}),
-  };
+  // Product structured data with offers — emitted ONLY when a price is set.
+  // Price-less products return null and render no Product markup, which keeps
+  // them out of Search Console's "invalid product snippet" report (rather than
+  // faking reviews/ratings, which violates Google's guidelines).
+  const productSchema = buildProductSchema(product, canonical);
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -193,11 +171,11 @@ export default async function ProductDetailPage({
 
   return (
     <div className="min-h-screen relative">
-      <JsonLd data={[productSchema, breadcrumbSchema]} />
+      <JsonLd data={[productSchema, breadcrumbSchema].filter(Boolean) as object[]} />
       <PageBackgroundImage />
       <div className="relative z-10">
       <Navigation />
-      <ProductDetailStickyBar productName={product.name} />
+      <ProductDetailStickyBar productName={product.name} price={price ?? undefined} />
 
       <main className="pt-24 pb-32 max-w-6xl mx-auto px-6">
         {/* Breadcrumb */}
@@ -268,6 +246,16 @@ export default async function ProductDetailPage({
                   <span className="text-slate-400 text-sm">—</span>
                 )}
               </div>
+            </div>
+            <div className="mb-6">
+              <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
+                MRP
+              </p>
+              {price ? (
+                <p className="text-2xl font-semibold text-white">{price}</p>
+              ) : (
+                <p className="text-slate-300">Price on request</p>
+              )}
             </div>
             <div className="flex flex-wrap gap-3">
               <Link

@@ -6,15 +6,21 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { formatPrice } from "@/lib/price";
 
 interface Product {
   _id?: string;
   name: string;
   slug: string;
+  productType?: "formulation" | "technical" | "solvent";
   category: string;
   image: string;
   description: string;
   activeIngredient: string;
+  casNumber?: string;
+  priceMin?: number | null;
+  priceMax?: number | null;
+  currency?: string;
   targetPestsLabelType?: "target_pests" | "mode_of_action";
   targetPests: string[];
   applicableCrops: string[];
@@ -90,6 +96,7 @@ export default function AdminProductsList() {
       if (data.success) {
         const productsWithDefaults = data.data.map((product: Product) => ({
           ...product,
+          productType: product.productType ?? "formulation",
           isActive: product.isActive ?? true,
           isFeatured: product.isFeatured ?? false,
         }));
@@ -251,6 +258,12 @@ export default function AdminProductsList() {
                           <h3 className="font-semibold text-white">
                             {product.name}
                           </h3>
+                          {(product.productType ?? "formulation") !==
+                            "formulation" && (
+                            <span className="px-2 py-1 bg-blue-500/20 border border-blue-500/40 rounded text-xs text-blue-300 font-medium capitalize">
+                              {product.productType}
+                            </span>
+                          )}
                           {product.isFeatured && (
                             <span className="px-2 py-1 bg-gradient-to-r from-emerald-500/20 to-amber-500/20 border border-emerald-500/40 rounded text-xs text-emerald-300 font-medium">
                               ⭐ Featured
@@ -263,10 +276,16 @@ export default function AdminProductsList() {
                           )}
                         </div>
                         <p className="text-sm text-white/70">
-                          {product.category} • {product.activeIngredient}
+                          {[
+                            product.category,
+                            product.activeIngredient || product.casNumber,
+                          ]
+                            .filter(Boolean)
+                            .join(" • ") || "—"}
                         </p>
                         <p className="text-xs text-white/50 mt-1">
                           Slug: {product.slug}
+                          {formatPrice(product) ? ` • ${formatPrice(product)}` : ""}
                         </p>
                       </div>
                     </div>

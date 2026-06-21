@@ -11,6 +11,7 @@ interface Product {
   _id?: string;
   name: string;
   slug: string;
+  productType: "formulation" | "technical" | "solvent";
   category: string;
   image: string;
   description: string;
@@ -26,6 +27,19 @@ interface Product {
   aboutProduct: string;
   safetyInformation: string[];
   safetyNote: string;
+  // B2B spec fields (technicals & solvents)
+  casNumber: string;
+  purity: string;
+  appearance: string;
+  molecularFormula: string;
+  hsnCode: string;
+  packing: string[];
+  applications: string[];
+  moq: string;
+  // Pricing / MRP
+  priceMin?: number | null;
+  priceMax?: number | null;
+  currency: string;
   isActive: boolean;
   isFeatured: boolean;
 }
@@ -33,6 +47,7 @@ interface Product {
 const initialProduct: Product = {
   name: "",
   slug: "",
+  productType: "formulation",
   category: "Insecticides",
   image: "",
   description: "",
@@ -49,6 +64,17 @@ const initialProduct: Product = {
   safetyInformation: [],
   safetyNote:
     "Always read the product label carefully before use. Follow all safety precautions and local regulations.",
+  casNumber: "",
+  purity: "",
+  appearance: "",
+  molecularFormula: "",
+  hsnCode: "",
+  packing: [],
+  applications: [],
+  moq: "",
+  priceMin: null,
+  priceMax: null,
+  currency: "INR",
   isActive: true,
   isFeatured: false,
 };
@@ -72,6 +98,8 @@ function AdminPanelContent() {
     keyFeatures: "",
     benefits: "",
     safetyInformation: "",
+    packing: "",
+    applications: "",
   });
 
   useEffect(() => {
@@ -88,7 +116,19 @@ function AdminPanelContent() {
       if (data.success) {
         setFormData({
           ...data.data,
+          productType: data.data.productType ?? "formulation",
           targetPestsLabelType: data.data.targetPestsLabelType ?? "target_pests",
+          casNumber: data.data.casNumber ?? "",
+          purity: data.data.purity ?? "",
+          appearance: data.data.appearance ?? "",
+          molecularFormula: data.data.molecularFormula ?? "",
+          hsnCode: data.data.hsnCode ?? "",
+          packing: data.data.packing ?? [],
+          applications: data.data.applications ?? [],
+          moq: data.data.moq ?? "",
+          priceMin: data.data.priceMin ?? null,
+          priceMax: data.data.priceMax ?? null,
+          currency: data.data.currency ?? "INR",
           isActive: data.data.isActive ?? true,
           isFeatured: data.data.isFeatured ?? false,
         });
@@ -177,10 +217,17 @@ function AdminPanelContent() {
       const url = isEditing ? `/api/products/${formData._id}` : "/api/products";
       const method = isEditing ? "PUT" : "POST";
 
+      // Solvents don't use the pesticide-class category — omit it so the schema
+      // enum validator doesn't reject an empty value.
+      const payload: Record<string, unknown> = { ...formData };
+      if (payload.productType === "solvent") {
+        delete payload.category;
+      }
+
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -306,23 +353,52 @@ function AdminPanelContent() {
 
                 <div>
                   <label className="block text-sm font-semibold text-white/90 mb-2">
-                    Category *
+                    Product Type *
                   </label>
                   <select
                     required
-                    value={formData.category}
+                    value={formData.productType}
                     onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
+                      setFormData({
+                        ...formData,
+                        productType: e.target.value as Product["productType"],
+                      })
                     }
                     className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
                   >
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat} className="bg-zinc-800">
-                        {cat}
-                      </option>
-                    ))}
+                    <option value="formulation" className="bg-zinc-800">
+                      Formulation (finished product)
+                    </option>
+                    <option value="technical" className="bg-zinc-800">
+                      Technical (raw active ingredient)
+                    </option>
+                    <option value="solvent" className="bg-zinc-800">
+                      Solvent (bulk chemical)
+                    </option>
                   </select>
                 </div>
+
+                {formData.productType !== "solvent" && (
+                  <div>
+                    <label className="block text-sm font-semibold text-white/90 mb-2">
+                      Category *
+                    </label>
+                    <select
+                      required
+                      value={formData.category}
+                      onChange={(e) =>
+                        setFormData({ ...formData, category: e.target.value })
+                      }
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+                    >
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat} className="bg-zinc-800">
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-semibold text-white/90 mb-2">
@@ -435,23 +511,25 @@ function AdminPanelContent() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-white/90 mb-2">
-                    Active Ingredient *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.activeIngredient}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        activeIngredient: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
-                  />
-                </div>
+                {formData.productType === "formulation" && (
+                  <div>
+                    <label className="block text-sm font-semibold text-white/90 mb-2">
+                      Active Ingredient *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.activeIngredient}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          activeIngredient: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
+                    />
+                  </div>
+                )}
               </div>
 
               <div>
@@ -469,6 +547,8 @@ function AdminPanelContent() {
                 />
               </div>
 
+              {formData.productType === "formulation" && (
+              <>
               {/* Array Fields */}
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Target Pests / Mode of Action */}
@@ -758,6 +838,184 @@ function AdminPanelContent() {
                   ))}
                 </div>
               </div>
+              </>
+              )}
+
+              {/* B2B spec fields (technicals & solvents) */}
+              {formData.productType !== "formulation" && (
+              <>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-white/90 mb-2">
+                      CAS Number
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.casNumber}
+                      onChange={(e) =>
+                        setFormData({ ...formData, casNumber: e.target.value })
+                      }
+                      placeholder="e.g., 138261-41-3"
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-white/90 mb-2">
+                      Purity / Assay
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.purity}
+                      onChange={(e) =>
+                        setFormData({ ...formData, purity: e.target.value })
+                      }
+                      placeholder="e.g., min 95% w/w"
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-white/90 mb-2">
+                      Appearance
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.appearance}
+                      onChange={(e) =>
+                        setFormData({ ...formData, appearance: e.target.value })
+                      }
+                      placeholder="e.g., White to off-white powder"
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-white/90 mb-2">
+                      Molecular Formula
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.molecularFormula}
+                      onChange={(e) =>
+                        setFormData({ ...formData, molecularFormula: e.target.value })
+                      }
+                      placeholder="e.g., C9H10ClN5O2S"
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-white/90 mb-2">
+                      HSN Code
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.hsnCode}
+                      onChange={(e) =>
+                        setFormData({ ...formData, hsnCode: e.target.value })
+                      }
+                      placeholder="e.g., 38089199"
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-white/90 mb-2">
+                      Minimum Order Qty (MOQ)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.moq}
+                      onChange={(e) =>
+                        setFormData({ ...formData, moq: e.target.value })
+                      }
+                      placeholder="e.g., 25 kg"
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
+                    />
+                  </div>
+                </div>
+
+                {/* Packing options */}
+                <div>
+                  <label className="block text-sm font-semibold text-white/90 mb-2">
+                    Packing options
+                  </label>
+                  <div className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={tempInput.packing}
+                      onChange={(e) =>
+                        setTempInput({ ...tempInput, packing: e.target.value })
+                      }
+                      className="flex-1 px-4 py-2 bg-white/10 border border-emerald-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="e.g., 25 kg HDPE drum, 200 L drum, IBC"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleArrayAdd("packing")}
+                      className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 border border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {formData.packing.map((item, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 bg-white/10 text-white/90 rounded-full text-sm flex items-center gap-2"
+                      >
+                        {item}
+                        <button
+                          type="button"
+                          onClick={() => handleArrayRemove("packing", idx)}
+                          className="text-white/70 hover:text-white"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Applications */}
+                <div>
+                  <label className="block text-sm font-semibold text-white/90 mb-2">
+                    Applications / end-uses
+                  </label>
+                  <div className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={tempInput.applications}
+                      onChange={(e) =>
+                        setTempInput({ ...tempInput, applications: e.target.value })
+                      }
+                      className="flex-1 px-4 py-2 bg-white/10 border border-emerald-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="e.g., EC formulations, industrial cleaning"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleArrayAdd("applications")}
+                      className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 border border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {formData.applications.map((item, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm flex items-center gap-2"
+                      >
+                        {item}
+                        <button
+                          type="button"
+                          onClick={() => handleArrayRemove("applications", idx)}
+                          className="text-blue-300 hover:text-blue-100"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </>
+              )}
 
               {/* About Product */}
               <div>
@@ -765,7 +1023,7 @@ function AdminPanelContent() {
                   About This Product *
                 </label>
                 <textarea
-                  required
+                  required={formData.productType === "formulation"}
                   rows={4}
                   value={formData.aboutProduct}
                   onChange={(e) =>
@@ -821,6 +1079,72 @@ function AdminPanelContent() {
                       </button>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Pricing / MRP (optional, all lines) */}
+              <div>
+                <label className="block text-sm font-semibold text-white/90 mb-2">
+                  MRP / Price (optional)
+                </label>
+                <p className="text-xs text-white/50 mb-3">
+                  Leave blank for &ldquo;Price on request&rdquo;. Fill only
+                  &ldquo;From&rdquo; for a single price, or both for a range.
+                  Entering a price emits valid product-snippet structured data.
+                </p>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs text-white/70 mb-1">
+                      From (min)
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={formData.priceMin ?? ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          priceMin:
+                            e.target.value === "" ? null : Number(e.target.value),
+                        })
+                      }
+                      placeholder="e.g., 1200"
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/70 mb-1">
+                      To (max, optional)
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={formData.priceMax ?? ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          priceMax:
+                            e.target.value === "" ? null : Number(e.target.value),
+                        })
+                      }
+                      placeholder="e.g., 1800"
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/70 mb-1">
+                      Currency
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.currency}
+                      onChange={(e) =>
+                        setFormData({ ...formData, currency: e.target.value })
+                      }
+                      placeholder="INR"
+                      className="w-full px-4 py-3 bg-white/10 border border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-white/50"
+                    />
+                  </div>
                 </div>
               </div>
 

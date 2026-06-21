@@ -165,6 +165,18 @@ export default function AboutPage() {
                   expand its portfolio.
                 </p>
                 <p>
+                  Beyond finished formulations, Senso Agrotech supplies{" "}
+                  <span className="text-white/90">
+                    technical grade active ingredients
+                  </span>{" "}
+                  and{" "}
+                  <span className="text-white/90">
+                    industrial &amp; agro solvents
+                  </span>{" "}
+                  in bulk — serving formulators and export buyers across the
+                  value chain, from raw material to finished product.
+                </p>
+                <p>
                   The aim of Senso Agrotech Private Limited is to build strong
                   relationship with customers to understand their needs and
                   deliver real performance in term of usage.

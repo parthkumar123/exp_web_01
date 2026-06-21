@@ -227,9 +227,9 @@ export default function ContactPage() {
                     <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-white mb-1">
+                {/* <h3 className="text-lg font-medium text-white mb-1">
                   Google Maps Integration
-                </h3>
+                </h3> */}
                 <p className="text-white/60 text-sm font-light mb-4">
                   Plot No. J-7832, GIDC Ind. Estate Ankleshwar, Gujarat 393002
                 </p>

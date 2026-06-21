@@ -107,3 +107,94 @@ export const websiteSchema = {
   name: SITE_NAME,
   url: SITE_URL,
 } as const;
+
+/**
+ * Minimal product shape needed to build Product + Offer structured data.
+ * Works for all three lines (formulation / technical / solvent).
+ */
+export interface ProductSchemaInput {
+  name: string;
+  slug: string;
+  image?: string;
+  description?: string;
+  aboutProduct?: string;
+  category?: string;
+  activeIngredient?: string;
+  applicableCrops?: string[];
+  packSizes?: string[];
+  casNumber?: string;
+  purity?: string;
+  packing?: string[];
+  priceMin?: number | null;
+  priceMax?: number | null;
+  currency?: string | null;
+}
+
+/**
+ * Build a schema.org Offer / AggregateOffer from a product's price, or null
+ * when no price is set. The value emitted here MUST match a price shown on the
+ * page (Google requires structured-data prices to be visible).
+ */
+export function buildOffers(p: ProductSchemaInput, url: string) {
+  if (p.priceMin == null && p.priceMax == null) return null;
+  const priceCurrency = p.currency || "INR";
+  const min = p.priceMin ?? p.priceMax!;
+  const max = p.priceMax ?? p.priceMin!;
+  const availability = "https://schema.org/InStock";
+  if (max > min) {
+    return {
+      "@type": "AggregateOffer",
+      priceCurrency,
+      lowPrice: min,
+      highPrice: max,
+      availability,
+      url,
+    };
+  }
+  return {
+    "@type": "Offer",
+    priceCurrency,
+    price: min,
+    availability,
+    url,
+  };
+}
+
+/**
+ * Build Product structured data WITH offers, or return null when the product
+ * has no price. Returning null is intentional: a Product node without
+ * offers/review/aggregateRating is flagged "invalid" in Search Console, so we
+ * simply omit the Product markup for price-less items (they leave the report)
+ * rather than fabricate reviews/ratings (a Google policy violation).
+ */
+export function buildProductSchema(p: ProductSchemaInput, canonical: string) {
+  const offers = buildOffers(p, canonical);
+  if (!offers) return null;
+
+  const candidateProps: { name: string; value?: string }[] = [
+    { name: "Active Ingredient", value: p.activeIngredient },
+    { name: "CAS Number", value: p.casNumber },
+    { name: "Purity", value: p.purity },
+    { name: "Applicable Crops", value: p.applicableCrops?.join(", ") },
+    { name: "Pack Sizes", value: p.packSizes?.join(", ") },
+    { name: "Packing", value: p.packing?.join(", ") },
+  ];
+  const additionalProperty = candidateProps
+    .filter((x) => x.value && x.value.length > 0)
+    .map((x) => ({ "@type": "PropertyValue", name: x.name, value: x.value }));
+
+  return {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    name: p.name,
+    sku: p.slug,
+    image: p.image ? [p.image] : undefined,
+    description: p.description || p.aboutProduct || undefined,
+    category: p.category || undefined,
+    url: canonical,
+    brand: { "@type": "Brand", name: SITE_NAME },
+    manufacturer: { "@type": "Organization", name: COMPANY_LEGAL_NAME },
+    offers,
+    ...(additionalProperty.length > 0 ? { additionalProperty } : {}),
+  };
+}

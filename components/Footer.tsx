@@ -35,6 +35,8 @@ export default function Footer() {
   const quickLinks = [
     { name: "About Us", url: "/about" },
     { name: "Our Products", url: "/products" },
+    { name: "Technicals", url: "/technicals" },
+    { name: "Solvents", url: "/solvents" },
     { name: "Contact Us", url: "/contact" },
     { name: "Find us on IndiaMART", url: "https://www.indiamart.com/senso-agrotech/profile.html?srsltid=AfmBOoofd5c6NyIF93DPBfVSNpeuZK4hJfyWDkTTu9WfISTjmc7MVU2d", external: true },
   ];

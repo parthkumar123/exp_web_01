@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo";
-import { getProductSlugs } from "@/lib/products";
+import { getProductSlugs, getProductSlugsByType } from "@/lib/products";
 
 // ISR: regenerated hourly and on product create/delete via on-demand revalidation.
 export const revalidate = 3600;
@@ -18,6 +18,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${SITE_URL}/products`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/technicals`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/solvents`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
@@ -48,15 +60,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // getProductSlugs already swallows errors and returns [] so the build never
+  // These helpers already swallow errors and return [] so the build never
   // fails if the database is unreachable at build time.
-  const products = await getProductSlugs();
-  const productRoutes: MetadataRoute.Sitemap = products.map((p) => ({
-    url: `${SITE_URL}/products/${p.slug}`,
-    lastModified: p.updatedAt ?? now,
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
+  const [products, technicals, solvents] = await Promise.all([
+    getProductSlugs(),
+    getProductSlugsByType("technical"),
+    getProductSlugsByType("solvent"),
+  ]);
 
-  return [...staticRoutes, ...productRoutes];
+  const mk = (
+    base: string,
+    list: { slug: string; updatedAt: Date | null }[]
+  ): MetadataRoute.Sitemap =>
+    list.map((p) => ({
+      url: `${SITE_URL}/${base}/${p.slug}`,
+      lastModified: p.updatedAt ?? now,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+
+  return [
+    ...staticRoutes,
+    ...mk("products", products),
+    ...mk("technicals", technicals),
+    ...mk("solvents", solvents),
+  ];
 }

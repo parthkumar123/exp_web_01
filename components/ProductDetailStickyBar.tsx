@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 
 export default function ProductDetailStickyBar({
   productName,
+  price,
 }: {
   productName: string;
+  price?: string;
 }) {
   const [visible, setVisible] = useState(false);
 
@@ -20,7 +22,12 @@ export default function ProductDetailStickyBar({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-between gap-4 px-6 py-4 bg-slate-900 border-t border-slate-600 shadow-lg">
-      <p className="text-slate-200 text-sm truncate max-w-[50%]">{productName}</p>
+      <div className="min-w-0">
+        <p className="text-slate-200 text-sm truncate">{productName}</p>
+        {price && (
+          <p className="text-white font-semibold text-sm">{price}</p>
+        )}
+      </div>
       <Link
         href="/contact"
         className="shrink-0 px-6 py-3 rounded-xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/25"

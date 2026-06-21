@@ -33,6 +33,11 @@ const productCategories = [
   { name: "Biological", href: "/products?category=Biological" },
 ];
 
+const bulkLines = [
+  { name: "Technicals (Raw Active Ingredients)", href: "/technicals" },
+  { name: "Solvents (Bulk Industrial & Agro)", href: "/solvents" },
+];
+
 export default function SitemapPage() {
   return (
     <div className="min-h-screen relative">
@@ -92,6 +97,25 @@ export default function SitemapPage() {
                       className="text-slate-200 hover:text-emerald-400 transition-colors text-sm"
                     >
                       {cat.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Bulk & Export lines */}
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+              <h2 className="text-lg font-semibold text-white mb-4 border-b border-white/10 pb-2">
+                Bulk &amp; Export Supply
+              </h2>
+              <ul className="space-y-2">
+                {bulkLines.map((line) => (
+                  <li key={line.href}>
+                    <Link
+                      href={line.href}
+                      className="text-slate-200 hover:text-emerald-400 transition-colors text-sm"
+                    >
+                      {line.name}
                     </Link>
                   </li>
                 ))}

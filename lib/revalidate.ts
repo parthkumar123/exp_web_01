@@ -7,7 +7,16 @@ import { revalidatePath } from "next/cache";
  */
 export function revalidateProductPaths(slug?: string) {
   revalidatePath("/"); // homepage featured products
-  revalidatePath("/products"); // catalogue listing
+  revalidatePath("/products"); // formulations listing
+  revalidatePath("/technicals"); // technicals listing
+  revalidatePath("/solvents"); // solvents listing
   revalidatePath("/sitemap.xml"); // XML sitemap
-  if (slug) revalidatePath(`/products/${slug}`); // the product detail page
+  if (slug) {
+    // Slugs are globally unique, so only one of these detail pages actually
+    // exists; revalidating the others is a harmless no-op. This keeps the API
+    // route from needing to know the product's type.
+    revalidatePath(`/products/${slug}`);
+    revalidatePath(`/technicals/${slug}`);
+    revalidatePath(`/solvents/${slug}`);
+  }
 }

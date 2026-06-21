@@ -657,15 +657,40 @@ export default function HomeClient({
                 </div>
               )}
 
-              {/* View All Products Button */}
+              {/* View All Products + business lines */}
               {featuredProducts.length > 0 && (
-                <div className="text-center mt-12">
+                <div className="text-center mt-12 space-y-8">
                   <Link
                     href="/products"
                     className="inline-block px-8 py-4 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 backdrop-blur-xl border border-emerald-500/30 text-white font-medium rounded-xl hover:from-emerald-500/30 hover:to-blue-500/30 transition-all duration-300"
                   >
                     View All Products →
                   </Link>
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-4">
+                      Integrated supply — technical to formulation
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-3">
+                      <Link
+                        href="/products"
+                        className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/80 text-sm hover:border-emerald-500/40 hover:text-white transition-all"
+                      >
+                        Formulations
+                      </Link>
+                      <Link
+                        href="/technicals"
+                        className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/80 text-sm hover:border-emerald-500/40 hover:text-white transition-all"
+                      >
+                        Technicals
+                      </Link>
+                      <Link
+                        href="/solvents"
+                        className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/80 text-sm hover:border-emerald-500/40 hover:text-white transition-all"
+                      >
+                        Solvents
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

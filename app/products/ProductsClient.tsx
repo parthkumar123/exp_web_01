@@ -8,6 +8,7 @@ import PageBackgroundImage from "@/components/PageBackgroundImage";
 import { ProductBadge, parseBadgeItems } from "@/components/ProductBadge";
 import { cloudinaryAuto } from "@/lib/cloudinaryUrl";
 import type { ProductListItem } from "@/lib/products";
+import { formatPrice } from "@/lib/price";
 
 const CATEGORIES = [
   { id: "All", name: "All Products", icon: "🌿" },
@@ -190,6 +191,11 @@ export default function ProductsClient({
                       </ProductBadge>
                     ))}
                   </div>
+                  {formatPrice(product) && (
+                    <p className="text-white font-semibold mb-3">
+                      {formatPrice(product)}
+                    </p>
+                  )}
                   <span className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 group-hover:text-emerald-300 transition-colors">
                     View product
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
