@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { revalidateProductPaths } from "@/lib/revalidate";
+import { submitProductToIndexNow } from "@/lib/indexnow";
 
 // GET single product by ID
 export async function GET(
@@ -59,6 +60,8 @@ export async function PUT(
     }
 
     revalidateProductPaths(product.slug);
+    // Ping IndexNow so the edited page is recrawled quickly. Fails soft.
+    await submitProductToIndexNow(product.slug, product.productType);
 
     return NextResponse.json({ success: true, data: product });
   } catch (error: unknown) {
@@ -93,6 +96,9 @@ export async function DELETE(
     }
 
     revalidateProductPaths(product.slug);
+    // Submitting the now-deleted URL prompts a recrawl that de-indexes it
+    // (engines hit a 404 and drop the page), and refreshes the listings.
+    await submitProductToIndexNow(product.slug, product.productType);
 
     return NextResponse.json({
       success: true,
