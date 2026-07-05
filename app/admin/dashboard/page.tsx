@@ -13,6 +13,7 @@ import {
   Radar,
   ChevronRight,
 } from "lucide-react";
+import { useAdminMe } from "@/hooks/useAdminMe";
 import {
   Badge,
   ButtonLink,
@@ -48,6 +49,9 @@ const CATEGORY_COLORS = [
 
 export default function DashboardPage() {
   const { data: session } = useSession();
+  // DB profile is the source of truth for the display name (editable on
+  // /profile); the Google-token session name is only a fallback.
+  const { me } = useAdminMe();
   const [stats, setStats] = useState<Stats | null>(null);
   const [failed, setFailed] = useState(false);
 
@@ -68,7 +72,8 @@ export default function DashboardPage() {
     };
   }, []);
 
-  const firstName = session?.user?.name?.split(" ")[0];
+  const displayName = me?.name ?? session?.user?.name;
+  const firstName = displayName?.split(" ")[0];
 
   return (
     <div>

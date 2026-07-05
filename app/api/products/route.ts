@@ -6,7 +6,11 @@ import { revalidateProductPaths } from "@/lib/revalidate";
 import { submitProductToIndexNow } from "@/lib/indexnow";
 import { getSession } from "@/lib/auth";
 
-// GET all products or filter by category
+// GET products. Without `page`/`limit` this returns the full (filtered) list —
+// the shape public consumers rely on. With `page` and/or `limit` it returns a
+// paginated slice plus a `pagination` block (used by the admin console, which
+// must never fetch the whole catalog). Extra filters: `search` (name/slug/
+// ingredient/CAS/category), `type`, and admin-only `status`.
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
@@ -16,18 +20,21 @@ export async function GET(request: NextRequest) {
     const slug = searchParams.get("slug");
     const featured = searchParams.get("featured");
     const includeInactive = searchParams.get("includeInactive");
+    const type = searchParams.get("type");
+    const status = searchParams.get("status");
+    const search = searchParams.get("search");
+    const pageParam = searchParams.get("page");
+    const limitParam = searchParams.get("limit");
 
-    const query: Record<string, string | boolean> = {};
+    const query: Record<string, unknown> = {};
 
-    // Only filter by isActive if not explicitly requesting inactive products.
     // Inactive (unpublished) products are admin-only — never leak them to
     // unauthenticated callers.
+    let isAdmin = false;
     if (includeInactive === "true") {
-      const session = await getSession();
-      if (!session) {
-        query.isActive = true;
-      }
-    } else {
+      isAdmin = Boolean(await getSession());
+    }
+    if (!isAdmin) {
       query.isActive = true;
     }
 
@@ -37,6 +44,32 @@ export async function GET(request: NextRequest) {
 
     if (featured === "true") {
       query.isFeatured = true;
+    }
+
+    if (type && ["formulation", "technical", "solvent"].includes(type)) {
+      // Legacy docs predate productType; they are formulations.
+      query.productType = type === "formulation" ? { $in: ["formulation", null] } : type;
+    }
+
+    // Status filter (admin console): active | inactive | featured.
+    if (isAdmin && status) {
+      if (status === "active") query.isActive = true;
+      else if (status === "inactive") query.isActive = false;
+      else if (status === "featured") query.isFeatured = true;
+    }
+
+    if (search?.trim()) {
+      const rx = new RegExp(
+        search.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+        "i"
+      );
+      query.$or = [
+        { name: rx },
+        { slug: rx },
+        { activeIngredient: rx },
+        { casNumber: rx },
+        { category: rx },
+      ];
     }
 
     if (slug) {
@@ -50,7 +83,39 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: true, data: product });
     }
 
-    const products = await Product.find(query).sort({ createdAt: -1 });
+    const sortParam = searchParams.get("sort") ?? "";
+    const sortField = ["name", "updatedAt", "createdAt"].includes(sortParam)
+      ? sortParam
+      : "createdAt";
+    const sortDir = searchParams.get("dir") === "asc" ? 1 : -1;
+    const sort: Record<string, 1 | -1> = { [sortField]: sortDir as 1 | -1 };
+
+    // Paginated mode — opt-in via page/limit so existing callers are unchanged.
+    if (pageParam !== null || limitParam !== null) {
+      const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
+      const limit = Math.min(100, Math.max(1, parseInt(limitParam ?? "10", 10) || 10));
+
+      const [products, total] = await Promise.all([
+        Product.find(query)
+          .sort(sort)
+          .skip((page - 1) * limit)
+          .limit(limit),
+        Product.countDocuments(query),
+      ]);
+
+      return NextResponse.json({
+        success: true,
+        data: products,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.max(1, Math.ceil(total / limit)),
+        },
+      });
+    }
+
+    const products = await Product.find(query).sort(sort);
 
     return NextResponse.json({ success: true, data: products });
   } catch (error: unknown) {

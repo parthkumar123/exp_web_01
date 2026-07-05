@@ -1,15 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
   type SortingState,
 } from "@tanstack/react-table";
@@ -42,40 +38,138 @@ import {
 
 const columnHelper = createColumnHelper<AdminProduct>();
 
+const PAGE_SIZES = [10, 20, 50];
+
+interface PageInfo {
+  total: number;
+  totalPages: number;
+}
+
+/**
+ * Server-paginated products table. Every filter, the search box, sorting and
+ * pagination run on the API — the console never fetches the whole catalog.
+ */
 export function ProductsTable({
-  products,
-  onChanged,
   initialFilters,
-  refreshing = false,
 }: {
-  products: AdminProduct[];
-  /** Called after any mutation (and by the refresh button) so the page can refetch. */
-  onChanged: () => void;
   /** Preset filters, e.g. from dashboard stat-card deep links (?status=active). */
   initialFilters?: { type?: string; category?: string; status?: string };
-  /** True while the page is refetching — rows swap to skeletons, filters stay. */
-  refreshing?: boolean;
 }) {
-  const router = useRouter();
   const confirm = useConfirm();
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = useState("");
+
+  // Query state — any change resets rows to null (skeleton) and refetches.
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState(initialFilters?.type ?? "all");
   const [categoryFilter, setCategoryFilter] = useState(initialFilters?.category ?? "all");
   const [statusFilter, setStatusFilter] = useState(initialFilters?.status ?? "all");
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Data state — rows === null renders skeleton rows (first load AND refetches).
+  const [rows, setRows] = useState<AdminProduct[] | null>(null);
+  const [pageInfo, setPageInfo] = useState<PageInfo>({ total: 0, totalPages: 1 });
   const [rowSelection, setRowSelection] = useState({});
   const [busy, setBusy] = useState(false);
 
-  const filtered = useMemo(() => {
-    return products.filter((p) => {
-      if (typeFilter !== "all" && p.productType !== typeFilter) return false;
-      if (categoryFilter !== "all" && p.category !== categoryFilter) return false;
-      if (statusFilter === "active" && !p.isActive) return false;
-      if (statusFilter === "inactive" && p.isActive) return false;
-      if (statusFilter === "featured" && !p.isFeatured) return false;
-      return true;
-    });
-  }, [products, typeFilter, categoryFilter, statusFilter]);
+  const loading = rows === null;
+
+  // Debounced server-side search: reset to page 1 when the term settles.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setDebouncedSearch((prev) => {
+        if (prev === search) return prev;
+        setPage(1);
+        setRows(null);
+        setRowSelection({});
+        return search;
+      });
+    }, 400);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const params = new URLSearchParams({
+          includeInactive: "true",
+          page: String(page),
+          limit: String(pageSize),
+        });
+        if (debouncedSearch.trim()) params.set("search", debouncedSearch.trim());
+        if (typeFilter !== "all") params.set("type", typeFilter);
+        if (categoryFilter !== "all") params.set("category", categoryFilter);
+        if (statusFilter !== "all") params.set("status", statusFilter);
+        if (sorting[0]) {
+          params.set("sort", sorting[0].id === "updated" ? "updatedAt" : "name");
+          params.set("dir", sorting[0].desc ? "desc" : "asc");
+        }
+
+        const res = await fetch(`/api/products?${params.toString()}`);
+        const data = await res.json();
+        if (cancelled) return;
+
+        if (data.success) {
+          setRows(
+            data.data.map((p: AdminProduct) => ({
+              ...p,
+              productType: p.productType ?? "formulation",
+              isActive: p.isActive ?? true,
+              isFeatured: p.isFeatured ?? false,
+            }))
+          );
+          setPageInfo({
+            total: data.pagination?.total ?? data.data.length,
+            totalPages: data.pagination?.totalPages ?? 1,
+          });
+        } else {
+          toast.error(data.error || "Failed to load products");
+          setRows([]);
+        }
+      } catch {
+        if (!cancelled) {
+          toast.error("Failed to load products");
+          setRows([]);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedSearch, typeFilter, categoryFilter, statusFilter, sorting, page, pageSize, refreshKey]);
+
+  /** Filter-change helper: reset paging/selection and show skeletons. */
+  const applyFilter =
+    (setter: (v: string) => void) => (value: string) => {
+      setter(value);
+      setPage(1);
+      setRows(null);
+      setRowSelection({});
+    };
+
+  const goToPage = (p: number) => {
+    setPage(p);
+    setRows(null);
+    setRowSelection({});
+  };
+
+  const changePageSize = (size: number) => {
+    setPageSize(size);
+    setPage(1);
+    setRows(null);
+    setRowSelection({});
+  };
+
+  const refetch = () => {
+    setRows(null);
+    setRowSelection({});
+    setRefreshKey((k) => k + 1);
+  };
 
   const columns = useMemo(
     () => [
@@ -103,6 +197,7 @@ export function ProductsTable({
       }),
       columnHelper.accessor("name", {
         header: "Product",
+        enableSorting: true,
         cell: ({ row }) => {
           const p = row.original;
           return (
@@ -125,6 +220,7 @@ export function ProductsTable({
       }),
       columnHelper.accessor("productType", {
         header: "Type",
+        enableSorting: false,
         cell: ({ getValue }) => {
           const t = getValue();
           return (
@@ -137,6 +233,7 @@ export function ProductsTable({
       columnHelper.accessor((p) => p.category ?? "", {
         id: "category",
         header: "Category",
+        enableSorting: false,
         cell: ({ getValue }) => (
           <span className="text-sm text-admin-body">{getValue() || "—"}</span>
         ),
@@ -144,6 +241,7 @@ export function ProductsTable({
       columnHelper.accessor((p) => p.priceMin ?? null, {
         id: "price",
         header: "Price",
+        enableSorting: false,
         cell: ({ row }) => (
           <span className="text-sm text-admin-body">
             {formatPrice(row.original) ?? "On request"}
@@ -153,6 +251,7 @@ export function ProductsTable({
       columnHelper.accessor((p) => p.updatedAt ?? "", {
         id: "updated",
         header: "Updated",
+        enableSorting: true,
         cell: ({ row }) => {
           const p = row.original;
           return (
@@ -176,6 +275,7 @@ export function ProductsTable({
       }),
       columnHelper.accessor("isActive", {
         header: "Status",
+        enableSorting: false,
         cell: ({ row }) => {
           const p = row.original;
           return (
@@ -232,28 +332,30 @@ export function ProductsTable({
   );
 
   const table = useReactTable({
-    data: filtered,
+    data: rows ?? [],
     columns,
-    state: { sorting, globalFilter, rowSelection },
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
-    onRowSelectionChange: setRowSelection,
-    globalFilterFn: (row, _columnId, value) => {
-      const q = String(value).toLowerCase();
-      const p = row.original;
-      return [p.name, p.slug, p.activeIngredient, p.casNumber, p.category]
-        .filter(Boolean)
-        .some((f) => String(f).toLowerCase().includes(q));
+    state: { sorting, rowSelection },
+    manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    pageCount: pageInfo.totalPages,
+    onSortingChange: (updater) => {
+      setSorting(updater);
+      setPage(1);
+      setRows(null);
+      setRowSelection({});
     },
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    initialState: { pagination: { pageSize: 10 } },
     getRowId: (row) => row._id,
   });
 
   const selected = table.getSelectedRowModel().rows.map((r) => r.original);
+  const hasFilters =
+    Boolean(debouncedSearch) ||
+    typeFilter !== "all" ||
+    categoryFilter !== "all" ||
+    statusFilter !== "all";
 
   async function deleteOne(p: AdminProduct) {
     const ok = await confirm({
@@ -269,7 +371,7 @@ export function ProductsTable({
     const data = await res.json();
     if (data.success) {
       toast.success("Product deleted");
-      onChanged();
+      refetch();
     } else {
       toast.error(data.error || "Failed to delete product");
     }
@@ -299,8 +401,7 @@ export function ProductsTable({
       const failed = results.filter((r) => !r).length;
       if (failed) toast.error(`${failed} product(s) failed to update`);
       else toast.success(`${results.length} product(s) ${isActive ? "activated" : "deactivated"}`);
-      setRowSelection({});
-      onChanged();
+      refetch();
     } finally {
       setBusy(false);
     }
@@ -325,29 +426,31 @@ export function ProductsTable({
       const failed = results.filter((r) => !r).length;
       if (failed) toast.error(`${failed} product(s) failed to delete`);
       else toast.success(`${results.length} product(s) deleted`);
-      setRowSelection({});
-      onChanged();
+      refetch();
     } finally {
       setBusy(false);
     }
   }
 
+  const rangeStart = pageInfo.total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const rangeEnd = Math.min(page * pageSize, pageInfo.total);
+
   return (
-    <div className="space-y-3">
+    <div className="flex min-h-0 flex-1 flex-col gap-3">
       {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative min-w-52 flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-admin-faint" />
           <Input
-            value={globalFilter}
-            onChange={(e) => setGlobalFilter(e.target.value)}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search name, slug, ingredient, CAS…"
             className="pl-9"
           />
         </div>
         <Select
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
+          onChange={(e) => applyFilter(setTypeFilter)(e.target.value)}
           className="w-auto"
           aria-label="Filter by type"
         >
@@ -358,7 +461,7 @@ export function ProductsTable({
         </Select>
         <Select
           value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
+          onChange={(e) => applyFilter(setCategoryFilter)(e.target.value)}
           className="w-auto"
           aria-label="Filter by category"
         >
@@ -371,7 +474,7 @@ export function ProductsTable({
         </Select>
         <Select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          onChange={(e) => applyFilter(setStatusFilter)(e.target.value)}
           className="w-auto"
           aria-label="Filter by status"
         >
@@ -382,13 +485,13 @@ export function ProductsTable({
         </Select>
         <Button
           variant="secondary"
-          onClick={onChanged}
-          disabled={refreshing}
+          onClick={refetch}
+          disabled={loading}
           title="Refresh"
           aria-label="Refresh products"
           className="px-2.5"
         >
-          <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
+          <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
         </Button>
       </div>
 
@@ -410,11 +513,12 @@ export function ProductsTable({
         </div>
       )}
 
-      {/* Table */}
-      <div className="overflow-hidden rounded-xl border border-admin-border bg-admin-surface shadow-sm">
-        <div className="overflow-x-auto">
+      {/* Table — the card fills the remaining page height; rows scroll inside
+          it (sticky header), never the page itself. */}
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-admin-border bg-admin-surface shadow-sm">
+        <div className="min-h-0 flex-1 overflow-auto">
           <table className="w-full text-left">
-            <thead className="border-b border-admin-border bg-admin-bg/60">
+            <thead className="sticky top-0 z-10 bg-admin-bg shadow-[inset_0_-1px_0_0_var(--color-admin-border)]">
               {table.getHeaderGroups().map((hg) => (
                 <tr key={hg.id}>
                   {hg.headers.map((header) => {
@@ -449,8 +553,8 @@ export function ProductsTable({
               ))}
             </thead>
             <tbody className="divide-y divide-admin-border">
-              {refreshing &&
-                Array.from({ length: Math.min(Math.max(filtered.length, 3), 10) }).map((_, i) => (
+              {loading &&
+                Array.from({ length: Math.min(pageSize, 10) }).map((_, i) => (
                   <tr key={`skeleton-${i}`}>
                     <td className="px-4 py-3">
                       <Skeleton className="h-4 w-4" />
@@ -484,80 +588,121 @@ export function ProductsTable({
                     </td>
                   </tr>
                 ))}
-              {!refreshing &&
+              {!loading &&
                 table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className={cn(
-                    "transition-colors hover:bg-admin-hover/50",
-                    row.getIsSelected() && "bg-admin-primary/5"
-                  )}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="px-4 py-3">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+                  <tr
+                    key={row.id}
+                    className={cn(
+                      "transition-colors hover:bg-admin-hover/50",
+                      row.getIsSelected() && "bg-admin-primary/5"
+                    )}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className="px-4 py-3">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
             </tbody>
           </table>
-        </div>
 
-        {!refreshing && table.getRowModel().rows.length === 0 && (
-          <EmptyState
+          {!loading && rows.length === 0 && (
+            <EmptyState
             icon={Package}
-            title={
-              globalFilter || typeFilter !== "all" || categoryFilter !== "all" || statusFilter !== "all"
-                ? "No products match your filters"
-                : "No products yet"
-            }
+            title={hasFilters ? "No products match your filters" : "No products yet"}
             description={
-              globalFilter || typeFilter !== "all" || categoryFilter !== "all" || statusFilter !== "all"
+              hasFilters
                 ? "Try changing or clearing the search and filters."
                 : "Create your first product to see it listed here."
             }
             action={
-              globalFilter || typeFilter !== "all" || categoryFilter !== "all" || statusFilter !== "all" ? (
+              hasFilters ? (
                 <Button
                   variant="secondary"
                   onClick={() => {
-                    setGlobalFilter("");
+                    setSearch("");
+                    setDebouncedSearch("");
                     setTypeFilter("all");
                     setCategoryFilter("all");
                     setStatusFilter("all");
+                    setPage(1);
+                    setRows(null);
+                    setRowSelection({});
                   }}
                 >
                   Clear filters
                 </Button>
               ) : (
-                <Button onClick={() => router.push("/admin/dashboard/products/new")}>
+                <Link
+                  href="/admin/dashboard/products/new"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-admin-primary px-3.5 py-2 text-sm font-medium text-white hover:bg-admin-primary-hover"
+                >
                   New product
-                </Button>
+                </Link>
               )
             }
-          />
-        )}
+            />
+          )}
+        </div>
 
-        {/* Pagination */}
-        {!refreshing && table.getPageCount() > 1 && (
-          <div className="flex items-center justify-between border-t border-admin-border px-4 py-2.5">
-            <p className="text-xs text-admin-muted">
-              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()} ·{" "}
-              {filtered.length} products
-            </p>
+        {/* Pagination bar — always visible so page/size controls are discoverable */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-admin-border px-4 py-2.5">
+          <p className="text-xs text-admin-muted">
+            {loading
+              ? "Loading…"
+              : pageInfo.total === 0
+                ? "0 products"
+                : `Showing ${rangeStart}–${rangeEnd} of ${pageInfo.total} products`}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4">
+            <label className="flex items-center gap-2 text-xs text-admin-muted">
+              Rows per page
+              <Select
+                value={String(pageSize)}
+                onChange={(e) => changePageSize(Number(e.target.value))}
+                className="w-auto py-1.5 text-xs"
+                aria-label="Rows per page"
+              >
+                {PAGE_SIZES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </Select>
+            </label>
+
+            <label className="flex items-center gap-2 text-xs text-admin-muted">
+              Page
+              <Select
+                value={String(page)}
+                onChange={(e) => goToPage(Number(e.target.value))}
+                className="w-auto py-1.5 text-xs"
+                aria-label="Go to page"
+                disabled={loading}
+              >
+                {Array.from({ length: pageInfo.totalPages }, (_, i) => i + 1).map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </Select>
+              <span>of {pageInfo.totalPages}</span>
+            </label>
+
             <div className="flex items-center gap-1">
               <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
+                onClick={() => goToPage(page - 1)}
+                disabled={loading || page <= 1}
                 className="rounded-md p-1.5 text-admin-muted hover:bg-admin-hover disabled:opacity-40"
                 aria-label="Previous page"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
+                onClick={() => goToPage(page + 1)}
+                disabled={loading || page >= pageInfo.totalPages}
                 className="rounded-md p-1.5 text-admin-muted hover:bg-admin-hover disabled:opacity-40"
                 aria-label="Next page"
               >
@@ -565,7 +710,7 @@ export function ProductsTable({
               </button>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
