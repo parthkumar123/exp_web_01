@@ -2,10 +2,12 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
 import { companyInfo } from "@/lib/companyData";
+import JsonLd from "@/components/JsonLd";
+import { buildBreadcrumbSchema } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Senso Agrotech",
+  title: "Privacy Policy",
   description:
     "Privacy Policy for Senso Agrotech Private Limited. Learn how we collect, use, and protect your information.",
   alternates: { canonical: "/privacy" },
@@ -14,6 +16,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen relative">
+      <JsonLd data={buildBreadcrumbSchema([{ name: "Privacy Policy", path: "/privacy" }])} />
       <PageBackgroundImage imageOpacity={0.18} />
       <div className="relative z-10">
       <Navigation />

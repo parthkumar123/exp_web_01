@@ -122,30 +122,38 @@ export async function getFeaturedProducts(limit = 3): Promise<ProductListItem[]>
   }
 }
 
-/** Slugs + last-modified for active formulations — used by the XML sitemap and static params. */
-export async function getProductSlugs(): Promise<
-  { slug: string; updatedAt: Date | null }[]
-> {
+export interface ProductLink {
+  slug: string;
+  name: string;
+  category: string;
+  updatedAt: Date | null;
+}
+
+/** Slug/name/category + last-modified for active formulations — used by the XML sitemap, static params and the HTML site-map. */
+export async function getProductSlugs(): Promise<ProductLink[]> {
   return getSlugsForFilter({ isActive: true, ...FORMULATION_FILTER });
 }
 
-/** Slugs + last-modified for a single line — used by the new /technicals & /solvents routes. */
+/** Slug/name/category + last-modified for a single line — used by the /technicals & /solvents routes and the HTML site-map. */
 export async function getProductSlugsByType(
   type: ProductType
-): Promise<{ slug: string; updatedAt: Date | null }[]> {
+): Promise<ProductLink[]> {
   return getSlugsForFilter({ isActive: true, productType: type });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function getSlugsForFilter(filter: any): Promise<
-  { slug: string; updatedAt: Date | null }[]
-> {
+async function getSlugsForFilter(filter: any): Promise<ProductLink[]> {
   try {
     await connectDB();
-    const products = await ProductModel.find(filter).select("slug updatedAt").lean();
+    const products = await ProductModel.find(filter)
+      .select("slug name category updatedAt")
+      .sort({ name: 1 })
+      .lean();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return products.map((p: any) => ({
       slug: p.slug,
+      name: p.name ?? p.slug,
+      category: p.category ?? "",
       updatedAt: p.updatedAt ? new Date(p.updatedAt) : null,
     }));
   } catch (error) {

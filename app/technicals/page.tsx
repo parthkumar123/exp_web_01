@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import B2BProductsClient from "@/components/B2BProductsClient";
 import JsonLd from "@/components/JsonLd";
 import { getProductsByType } from "@/lib/products";
-import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
+import {
+  SITE_NAME,
+  DEFAULT_OG_IMAGE,
+  absoluteUrl,
+  buildBreadcrumbSchema,
+  buildItemListSchema,
+} from "@/lib/seo";
 
 // ISR: regenerated hourly; product mutations trigger on-demand revalidation.
 export const revalidate = 3600;
@@ -11,7 +17,7 @@ const DESCRIPTION =
   "Technical grade active ingredients (raw AI) from Senso Agrotech — high-purity insecticide, fungicide and herbicide technicals for formulators and bulk / export buyers.";
 
 export const metadata: Metadata = {
-  title: "Technicals (Raw Active Ingredients) | Senso Agrotech",
+  title: "Technicals (Raw Active Ingredients)",
   description: DESCRIPTION,
   alternates: { canonical: "/technicals" },
   openGraph: {
@@ -33,18 +39,14 @@ export const metadata: Metadata = {
 export default async function TechnicalsPage() {
   const products = await getProductsByType("technical");
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Technicals", item: absoluteUrl("/technicals") },
-    ],
-  };
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Technicals", path: "/technicals" },
+  ]);
+  const itemListSchema = buildItemListSchema(products, "/technicals");
 
   return (
     <>
-      <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={[breadcrumbSchema, itemListSchema]} />
       <B2BProductsClient
         products={products}
         lineLabel="Technicals"

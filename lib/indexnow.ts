@@ -88,6 +88,17 @@ export async function submitUrlsToIndexNow(urls: string[]): Promise<boolean> {
   const host = siteHost();
   if (!key || !isSubmittableHost(host)) return false;
 
+  // Only the real production deployment may ping: preview deploys carry the
+  // production NEXT_PUBLIC_BASE_URL, so without this guard they'd submit live
+  // URLs. INDEXNOW_ENABLED=1 overrides for deliberate local/manual runs.
+  if (
+    process.env.INDEXNOW_ENABLED !== "1" &&
+    process.env.VERCEL_ENV &&
+    process.env.VERCEL_ENV !== "production"
+  ) {
+    return false;
+  }
+
   // The protocol rejects URLs that don't belong to `host`; dedupe and cap too.
   const urlList = [...new Set(urls)]
     .filter((u) => {

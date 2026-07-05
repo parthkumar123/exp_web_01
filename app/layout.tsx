@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -23,20 +23,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Senso Agrotech - Protecting Crops, Empowering Farmers",
+  // Child pages set bare titles ("Products", product names, …); the template
+  // appends the brand once. Never hardcode "| Senso Agrotech" in a page title.
+  title: {
+    default: "Senso Agrotech - Protecting Crops, Empowering Farmers",
+    template: "%s | Senso Agrotech",
+  },
   description:
     "Manufacturing excellence in crop protection solutions. Premium Insecticides, Fungicides, Herbicides & Plant Growth Regulators. Registered with CIB&RC, committed to sustainable agriculture.",
-  keywords: [
-    "Senso Agrotech",
-    "agrochemicals",
-    "crop protection",
-    "fungicides",
-    "insecticides",
-    "herbicides",
-    "plant growth regulators",
-    "agriculture India",
-    "CIB&RC registered",
-  ],
   authors: [{ name: "Senso Agrotech Private Limited" }],
   creator: "Senso Agrotech Private Limited",
   publisher: "Senso Agrotech Private Limited",
@@ -78,6 +72,11 @@ export const metadata: Metadata = {
     },
   },
   ...(GSC_VERIFICATION ? { verification: { google: GSC_VERIFICATION } } : {}),
+};
+
+export const viewport: Viewport = {
+  // emerald-950 — matches the site's dark theme (browser UI / PWA chrome).
+  themeColor: "#022c22",
 };
 
 export default function RootLayout({

@@ -3,11 +3,18 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
 import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
+import { buildBreadcrumbSchema } from "@/lib/seo";
+import { getProductSlugs, getProductSlugsByType, type ProductLink } from "@/lib/products";
+
+// ISR: regenerated hourly and on product mutations (on-demand revalidation),
+// same as the XML sitemap — the two stay in sync.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Sitemap | Senso Agrotech",
+  title: "Sitemap",
   description:
-    "Sitemap of Senso Agrotech website. Find all main pages and product categories.",
+    "Sitemap of Senso Agrotech website. Find all main pages, product categories and every product, technical and solvent we offer.",
   alternates: { canonical: "/site-map" },
 };
 
@@ -24,23 +31,70 @@ const legalPages = [
   { name: "Sitemap", href: "/site-map" },
 ];
 
-const productCategories = [
-  { name: "Insecticides", href: "/products?category=Insecticides" },
-  { name: "Fungicides", href: "/products?category=Fungicides" },
-  { name: "Herbicides", href: "/products?category=Herbicides" },
-  { name: "Plant Growth Regulators (PGR)", href: "/products?category=PGR" },
-  { name: "Fertilizers", href: "/products?category=Fertilizers" },
-  { name: "Biological", href: "/products?category=Biological" },
-];
-
 const bulkLines = [
   { name: "Technicals (Raw Active Ingredients)", href: "/technicals" },
   { name: "Solvents (Bulk Industrial & Agro)", href: "/solvents" },
 ];
 
-export default function SitemapPage() {
+// Display order for formulation categories; unknown categories append at the end.
+const CATEGORY_ORDER = [
+  "Insecticides",
+  "Fungicides",
+  "Herbicides",
+  "PGR",
+  "Fertilizers",
+  "Biological",
+];
+
+function groupByCategory(products: ProductLink[]): [string, ProductLink[]][] {
+  const groups = new Map<string, ProductLink[]>();
+  for (const p of products) {
+    const key = p.category || "Other";
+    const list = groups.get(key) ?? [];
+    list.push(p);
+    groups.set(key, list);
+  }
+  return [...groups.entries()].sort(([a], [b]) => {
+    const ia = CATEGORY_ORDER.indexOf(a);
+    const ib = CATEGORY_ORDER.indexOf(b);
+    return (ia === -1 ? CATEGORY_ORDER.length : ia) - (ib === -1 ? CATEGORY_ORDER.length : ib);
+  });
+}
+
+function LinkList({
+  items,
+  basePath,
+}: {
+  items: { slug: string; name: string }[];
+  basePath: string;
+}) {
+  return (
+    <ul className="space-y-2">
+      {items.map((p) => (
+        <li key={p.slug}>
+          <Link
+            href={`${basePath}/${p.slug}`}
+            className="text-slate-200 hover:text-emerald-400 transition-colors text-sm"
+          >
+            {p.name}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default async function SitemapPage() {
+  const [products, technicals, solvents] = await Promise.all([
+    getProductSlugs(),
+    getProductSlugsByType("technical"),
+    getProductSlugsByType("solvent"),
+  ]);
+  const productGroups = groupByCategory(products);
+
   return (
     <div className="min-h-screen relative">
+      <JsonLd data={buildBreadcrumbSchema([{ name: "Sitemap", path: "/site-map" }])} />
       <PageBackgroundImage imageOpacity={0.18} />
       <div className="relative z-10">
       <Navigation />
@@ -57,13 +111,13 @@ export default function SitemapPage() {
             Sitemap
           </h1>
           <p className="text-lg text-white/70 max-w-2xl mx-auto font-light">
-            All main pages and sections of our website
+            All pages, products and sections of our website
           </p>
         </div>
       </section>
 
       <section className="pb-20 relative">
-        <div className="max-w-4xl mx-auto px-8">
+        <div className="max-w-5xl mx-auto px-8">
           <div className="grid md:grid-cols-3 gap-10">
             {/* Main pages */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
@@ -78,25 +132,6 @@ export default function SitemapPage() {
                       className="text-slate-200 hover:text-emerald-400 transition-colors text-sm"
                     >
                       {page.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Product categories */}
-            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-              <h2 className="text-lg font-semibold text-white mb-4 border-b border-white/10 pb-2">
-                Product Categories
-              </h2>
-              <ul className="space-y-2">
-                {productCategories.map((cat) => (
-                  <li key={cat.href}>
-                    <Link
-                      href={cat.href}
-                      className="text-slate-200 hover:text-emerald-400 transition-colors text-sm"
-                    >
-                      {cat.name}
                     </Link>
                   </li>
                 ))}
@@ -141,6 +176,65 @@ export default function SitemapPage() {
               </ul>
             </div>
           </div>
+
+          {/* All products, grouped by category */}
+          {productGroups.length > 0 && (
+            <div className="mt-10">
+              <h2 className="text-2xl font-semibold text-white mb-6">
+                All Products
+              </h2>
+              <div className="grid md:grid-cols-3 gap-10">
+                {productGroups.map(([category, items]) => (
+                  <div
+                    key={category}
+                    className="rounded-2xl border border-white/10 bg-white/[0.04] p-6"
+                  >
+                    <h3 className="text-lg font-semibold text-white mb-4 border-b border-white/10 pb-2">
+                      <Link
+                        href={`/products?category=${encodeURIComponent(category)}`}
+                        className="hover:text-emerald-400 transition-colors"
+                      >
+                        {category}
+                      </Link>
+                    </h3>
+                    <LinkList items={items} basePath="/products" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Technicals & Solvents */}
+          {(technicals.length > 0 || solvents.length > 0) && (
+            <div className="mt-10 grid md:grid-cols-2 gap-10">
+              {technicals.length > 0 && (
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+                  <h2 className="text-lg font-semibold text-white mb-4 border-b border-white/10 pb-2">
+                    <Link
+                      href="/technicals"
+                      className="hover:text-emerald-400 transition-colors"
+                    >
+                      Technicals
+                    </Link>
+                  </h2>
+                  <LinkList items={technicals} basePath="/technicals" />
+                </div>
+              )}
+              {solvents.length > 0 && (
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+                  <h2 className="text-lg font-semibold text-white mb-4 border-b border-white/10 pb-2">
+                    <Link
+                      href="/solvents"
+                      className="hover:text-emerald-400 transition-colors"
+                    >
+                      Solvents
+                    </Link>
+                  </h2>
+                  <LinkList items={solvents} basePath="/solvents" />
+                </div>
+              )}
+            </div>
+          )}
 
           <p className="mt-10 text-center text-white/50 text-sm">
             For an XML sitemap for search engines, visit{" "}

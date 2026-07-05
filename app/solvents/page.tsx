@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import B2BProductsClient from "@/components/B2BProductsClient";
 import JsonLd from "@/components/JsonLd";
 import { getProductsByType } from "@/lib/products";
-import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
+import {
+  SITE_NAME,
+  DEFAULT_OG_IMAGE,
+  absoluteUrl,
+  buildBreadcrumbSchema,
+  buildItemListSchema,
+} from "@/lib/seo";
 
 // ISR: regenerated hourly; product mutations trigger on-demand revalidation.
 export const revalidate = 3600;
@@ -11,7 +17,7 @@ const DESCRIPTION =
   "Industrial and agrochemical solvents from Senso Agrotech — high-purity carrier solvents supplied in bulk (drums, IBCs) to formulators and export buyers. CAS, specs and COA on request.";
 
 export const metadata: Metadata = {
-  title: "Solvents (Bulk Industrial & Agro) | Senso Agrotech",
+  title: "Solvents (Bulk Industrial & Agro)",
   description: DESCRIPTION,
   alternates: { canonical: "/solvents" },
   openGraph: {
@@ -33,18 +39,14 @@ export const metadata: Metadata = {
 export default async function SolventsPage() {
   const products = await getProductsByType("solvent");
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Solvents", item: absoluteUrl("/solvents") },
-    ],
-  };
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Solvents", path: "/solvents" },
+  ]);
+  const itemListSchema = buildItemListSchema(products, "/solvents");
 
   return (
     <>
-      <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={[breadcrumbSchema, itemListSchema]} />
       <B2BProductsClient
         products={products}
         lineLabel="Solvents"

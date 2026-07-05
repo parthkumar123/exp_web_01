@@ -4,8 +4,11 @@
  * so that on-page content and structured data stay consistent (good for local SEO).
  */
 
+// Fallback must be the canonical host (www) — the apex redirects to it, so a
+// missing NEXT_PUBLIC_BASE_URL would otherwise emit canonicals/sitemap URLs
+// that point at a redirect.
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_BASE_URL || "https://sensoagrotech.com"
+  process.env.NEXT_PUBLIC_BASE_URL || "https://www.sensoagrotech.com"
 ).replace(/\/$/, "");
 
 export const SITE_NAME = "Senso Agrotech";
@@ -57,6 +60,13 @@ export const organizationSchema = {
   email: EMAIL,
   telephone: TELEPHONE,
   address: POSTAL_ADDRESS,
+  founder: {
+    "@type": "Person",
+    name: "Hardik Shiyani",
+    jobTitle: "Founder & Managing Director",
+    sameAs: ["https://www.linkedin.com/in/hardikshiyani/"],
+  },
+  foundingDate: "2018",
   sameAs: SOCIAL_PROFILES,
 } as const;
 
@@ -196,5 +206,93 @@ export function buildProductSchema(p: ProductSchemaInput, canonical: string) {
     manufacturer: { "@type": "Organization", name: COMPANY_LEGAL_NAME },
     offers,
     ...(additionalProperty.length > 0 ? { additionalProperty } : {}),
+  };
+}
+
+/**
+ * BreadcrumbList structured data. "Home" is always item 1; pass the rest of
+ * the trail as { name, path } with site-relative paths.
+ */
+export function buildBreadcrumbSchema(
+  trail: { name: string; path: string }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      ...trail.map((t, i) => ({
+        "@type": "ListItem",
+        position: i + 2,
+        name: t.name,
+        item: absoluteUrl(t.path),
+      })),
+    ],
+  };
+}
+
+/**
+ * Person structured data for leadership/team members shown on the About page.
+ * `sameAs` links the person to their LinkedIn profile — a strong authenticity
+ * (E-E-A-T) signal tying real people to the Organization.
+ */
+export function buildPersonSchema(p: {
+  name: string;
+  role: string;
+  image: string;
+  bio: string;
+  linkedin: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: p.name,
+    jobTitle: p.role,
+    description: p.bio,
+    image: absoluteUrl(p.image),
+    url: absoluteUrl("/about"),
+    worksFor: {
+      "@type": "Organization",
+      name: COMPANY_LEGAL_NAME,
+      url: SITE_URL,
+    },
+    sameAs: [p.linkedin],
+  };
+}
+
+/**
+ * FAQPage structured data. The Q&A pairs passed here MUST be identical to the
+ * FAQ content visibly rendered on the page (Google requirement).
+ */
+export function buildFaqSchema(faqs: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  };
+}
+
+/**
+ * ItemList structured data for catalogue/listing pages. Tells search engines
+ * the page enumerates these product URLs — an extra discovery signal for
+ * detail pages beyond plain anchor links.
+ */
+export function buildItemListSchema(
+  items: { name: string; slug: string }[],
+  basePath: string
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: items.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: p.name,
+      url: absoluteUrl(`${basePath}/${p.slug}`),
+    })),
   };
 }

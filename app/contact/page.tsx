@@ -3,13 +3,20 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
 import JsonLd from "@/components/JsonLd";
-import { SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl, localBusinessSchema } from "@/lib/seo";
+import {
+  SITE_NAME,
+  DEFAULT_OG_IMAGE,
+  absoluteUrl,
+  localBusinessSchema,
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+} from "@/lib/seo";
 
 const DESCRIPTION =
   "Contact Senso Agrotech Private Limited — crop protection manufacturer in Ankleshwar, Gujarat. Call, email or message us on WhatsApp for product enquiries and quotes.";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Senso Agrotech",
+  title: "Contact Us",
   description: DESCRIPTION,
   alternates: { canonical: "/contact" },
   openGraph: {
@@ -28,10 +35,51 @@ export const metadata: Metadata = {
   },
 };
 
+// Rendered verbatim in the FAQ section below AND emitted as FAQPage JSON-LD —
+// the two must stay identical (Google requires schema to mirror visible text).
+const FAQS = [
+  {
+    question: "What products does Senso Agrotech manufacture?",
+    answer:
+      "We manufacture crop protection formulations — Insecticides, Fungicides, Herbicides, Plant Growth Regulators, Fertilizers and Biologicals — and also supply technical grade active ingredients (raw AI) and industrial solvents in bulk.",
+  },
+  {
+    question: "Do you supply in bulk or for export?",
+    answer:
+      "Yes. Bulk and export supply is a core part of our business. Technicals and solvents are supplied in drums and IBCs to formulators and international buyers. Contact us with your requirement and destination for a quote.",
+  },
+  {
+    question: "Can you provide a COA and product specifications?",
+    answer:
+      "Yes. A Certificate of Analysis (COA), specifications and packing details are available on request for all technicals, solvents and formulations.",
+  },
+  {
+    question: "What is the minimum order quantity (MOQ)?",
+    answer:
+      "MOQ depends on the product and packing. Retail-pack formulations and bulk supplies have different minimums — share your requirement by phone, email or WhatsApp and we will confirm MOQ and lead time.",
+  },
+  {
+    question: "How do I become a dealer or distributor?",
+    answer:
+      "We welcome dealership and distributor enquiries across India. Call us on +91 63549 14468 or email sales@sensoagrotech.com with your name, firm, and the districts you cover, and our sales team will get in touch.",
+  },
+  {
+    question: "Is Senso Agrotech a registered manufacturer?",
+    answer:
+      "Yes. Senso Agrotech Private Limited is registered with CIB&RC and operates an ISO 9001:2015 certified manufacturing facility at GIDC Industrial Estate, Ankleshwar, Gujarat.",
+  },
+];
+
 export default function ContactPage() {
   return (
     <div className="min-h-screen relative">
-      <JsonLd data={localBusinessSchema} />
+      <JsonLd
+        data={[
+          localBusinessSchema,
+          buildBreadcrumbSchema([{ name: "Contact Us", path: "/contact" }]),
+          buildFaqSchema(FAQS),
+        ]}
+      />
       <PageBackgroundImage src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=1920&q=80" imageOpacity={0.18} />
       <div className="relative z-10">
       <Navigation />
@@ -243,6 +291,47 @@ export default function ContactPage() {
                 </a>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ — visible copy must stay identical to the FAQS constant / JSON-LD */}
+      <section className="py-16 relative">
+        <div className="max-w-3xl mx-auto px-8">
+          <div className="text-center mb-10">
+            <div className="inline-block px-4 py-1.5 mb-4 backdrop-blur-xl bg-white/5 border border-white/10 rounded-full">
+              <span className="text-xs font-medium text-white/70 tracking-[0.2em] uppercase">
+                FAQ
+              </span>
+            </div>
+            <h2 className="text-4xl font-extralight text-white mb-2 tracking-tight">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-white/60 font-light text-sm">
+              Quick answers about products, bulk supply and dealership
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {FAQS.map((faq) => (
+              <details
+                key={faq.question}
+                className="group rounded-2xl border border-white/10 bg-white/[0.04] open:bg-white/[0.06] transition-colors"
+              >
+                <summary className="flex items-center justify-between gap-4 cursor-pointer list-none px-6 py-5 text-white font-light">
+                  <h3 className="text-base font-normal">{faq.question}</h3>
+                  <span
+                    aria-hidden
+                    className="shrink-0 text-emerald-400 transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="px-6 pb-5 text-slate-200 font-light leading-relaxed">
+                  {faq.answer}
+                </p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

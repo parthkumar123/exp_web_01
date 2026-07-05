@@ -2,10 +2,12 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
 import { companyInfo } from "@/lib/companyData";
+import JsonLd from "@/components/JsonLd";
+import { buildBreadcrumbSchema } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Senso Agrotech",
+  title: "Terms of Service",
   description:
     "Terms of Service for Senso Agrotech Private Limited. Read our terms governing use of our website and services.",
   alternates: { canonical: "/terms" },
@@ -14,6 +16,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <div className="min-h-screen relative">
+      <JsonLd data={buildBreadcrumbSchema([{ name: "Terms of Service", path: "/terms" }])} />
       <PageBackgroundImage imageOpacity={0.18} />
       <div className="relative z-10">
       <Navigation />

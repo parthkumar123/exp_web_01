@@ -4,10 +4,10 @@ import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
 import B2BProductDetail, { type B2BProductDetailData } from "@/components/B2BProductDetail";
 import {
-  SITE_URL,
   SITE_NAME,
   SITE_DESCRIPTION,
   absoluteUrl,
+  buildBreadcrumbSchema,
   buildProductSchema,
 } from "@/lib/seo";
 import {
@@ -49,12 +49,14 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: `Not found | ${SITE_NAME}`,
+      title: "Not found",
       robots: { index: false, follow: true },
     };
   }
 
-  const title = `${product.name} Technical | ${SITE_NAME}`;
+  // Bare title — the root layout template appends "| Senso Agrotech".
+  const title = `${product.name} Technical`;
+  const ogTitle = `${title} | ${SITE_NAME}`;
   const description = truncate(
     product.description || product.aboutProduct || SITE_DESCRIPTION
   );
@@ -68,14 +70,14 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       url: absoluteUrl(canonical),
-      title,
+      title: ogTitle,
       description,
       siteName: SITE_NAME,
       images,
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: ogTitle,
       description,
       images: product.image ? [product.image] : undefined,
     },
@@ -99,15 +101,10 @@ export default async function TechnicalDetailPage({
 
   // Product structured data with offers — only when a price is set (else null).
   const productSchema = buildProductSchema(product, canonical);
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: LINE_LABEL, item: absoluteUrl(BASE_PATH) },
-      { "@type": "ListItem", position: 3, name: product.name, item: canonical },
-    ],
-  };
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: LINE_LABEL, path: BASE_PATH },
+    { name: product.name, path: `${BASE_PATH}/${product.slug}` },
+  ]);
 
   return (
     <>

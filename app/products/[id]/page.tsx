@@ -10,7 +10,13 @@ import ProductDetailStickyBar from "@/components/ProductDetailStickyBar";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
 import { ProductBadge, parseBadgeItems } from "@/components/ProductBadge";
 import JsonLd from "@/components/JsonLd";
-import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, absoluteUrl, buildProductSchema } from "@/lib/seo";
+import {
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  absoluteUrl,
+  buildBreadcrumbSchema,
+  buildProductSchema,
+} from "@/lib/seo";
 import { cloudinaryAuto } from "@/lib/cloudinaryUrl";
 import { getProductSlugs } from "@/lib/products";
 import { formatPrice } from "@/lib/price";
@@ -82,12 +88,14 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: `Product not found | ${SITE_NAME}`,
+      title: "Product not found",
       robots: { index: false, follow: true },
     };
   }
 
-  const title = `${product.name} | ${SITE_NAME}`;
+  // Bare title — the root layout template appends "| Senso Agrotech".
+  const title = product.name;
+  const ogTitle = `${title} | ${SITE_NAME}`;
   const description = truncate(
     product.description || product.aboutProduct || SITE_DESCRIPTION
   );
@@ -103,14 +111,14 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       url: absoluteUrl(canonical),
-      title,
+      title: ogTitle,
       description,
       siteName: SITE_NAME,
       images,
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: ogTitle,
       description,
       images: product.image ? [product.image] : undefined,
     },
@@ -159,15 +167,10 @@ export default async function ProductDetailPage({
   // them out of Search Console's "invalid product snippet" report (rather than
   // faking reviews/ratings, which violates Google's guidelines).
   const productSchema = buildProductSchema(product, canonical);
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Products", item: absoluteUrl("/products") },
-      { "@type": "ListItem", position: 3, name: product.name, item: canonical },
-    ],
-  };
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Products", path: "/products" },
+    { name: product.name, path: `/products/${product.slug}` },
+  ]);
 
   return (
     <div className="min-h-screen relative">

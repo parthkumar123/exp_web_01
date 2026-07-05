@@ -6,55 +6,49 @@ import { getProductSlugs, getProductSlugsByType } from "@/lib/products";
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
-
+  // Static routes deliberately omit lastModified: stamping "now" on every
+  // hourly regeneration marks them as always-just-changed, which erodes
+  // Google's trust in the sitemap's dates. Product URLs use their real
+  // updatedAt below, so those dates stay meaningful.
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: SITE_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: SITE_URL, changeFrequency: "weekly", priority: 1 },
     {
       url: `${SITE_URL}/about`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${SITE_URL}/products`,
-      lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${SITE_URL}/technicals`,
-      lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${SITE_URL}/solvents`,
-      lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${SITE_URL}/contact`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${SITE_URL}/terms`,
-      lastModified: now,
       changeFrequency: "yearly",
       priority: 0.4,
     },
     {
       url: `${SITE_URL}/privacy`,
-      lastModified: now,
       changeFrequency: "yearly",
       priority: 0.4,
     },
     {
       url: `${SITE_URL}/site-map`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.3,
     },
@@ -74,7 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ): MetadataRoute.Sitemap =>
     list.map((p) => ({
       url: `${SITE_URL}/${base}/${p.slug}`,
-      lastModified: p.updatedAt ?? now,
+      ...(p.updatedAt ? { lastModified: p.updatedAt } : {}),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     }));
