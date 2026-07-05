@@ -2,13 +2,22 @@ import type { Metadata } from "next";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import PageBackgroundImage from "@/components/PageBackgroundImage";
-import { SITE_NAME, DEFAULT_OG_IMAGE, absoluteUrl } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import Image from "next/image";
+import {
+  SITE_NAME,
+  DEFAULT_OG_IMAGE,
+  absoluteUrl,
+  buildBreadcrumbSchema,
+  buildPersonSchema,
+} from "@/lib/seo";
+import { LEADERSHIP } from "@/lib/team";
 
 const DESCRIPTION =
   "Senso Agrotech Private Limited is one of India's leading manufacturers of crop protection products — Insecticides, Fungicides, Herbicides, PGRs and fertilizers — with over a decade of ISO 9001:2015 certified manufacturing excellence.";
 
 export const metadata: Metadata = {
-  title: "About Us | Senso Agrotech",
+  title: "About Us",
   description: DESCRIPTION,
   alternates: { canonical: "/about" },
   openGraph: {
@@ -61,6 +70,12 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen relative">
+      <JsonLd
+        data={[
+          buildBreadcrumbSchema([{ name: "About Us", path: "/about" }]),
+          ...LEADERSHIP.map(buildPersonSchema),
+        ]}
+      />
       <PageBackgroundImage src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80" imageOpacity={0.18} />
       <div className="relative z-10">
       <Navigation />
@@ -207,6 +222,69 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Leadership team */}
+      <section className="py-20 relative">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="text-center mb-14">
+            <div className="inline-block px-6 py-2 mb-6 backdrop-blur-xl bg-emerald-500/20 border border-emerald-500/40 rounded-full">
+              <span className="text-sm font-medium text-emerald-300 tracking-[0.2em] uppercase">
+                Leadership
+              </span>
+            </div>
+            <h2 className="text-5xl font-extralight text-white mb-4 tracking-tight">
+              The People Behind Senso Agrotech
+            </h2>
+            <p className="text-lg text-white/70 max-w-2xl mx-auto font-light">
+              A hands-on leadership team running strategy, manufacturing and
+              sales — from our Ankleshwar facility to markets worldwide.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {LEADERSHIP.map((member) => (
+              <div
+                key={member.name}
+                className="group rounded-2xl border border-white/10 bg-white/[0.04] overflow-hidden hover:border-emerald-500/30 hover:bg-white/[0.06] transition-all duration-300"
+              >
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <Image
+                    src={member.image}
+                    alt={`${member.name} — ${member.role}, Senso Agrotech`}
+                    width={640}
+                    height={800}
+                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-medium text-white">
+                    {member.name}
+                  </h3>
+                  <p className="text-emerald-400 text-sm font-medium mt-1 mb-3">
+                    {member.role}
+                  </p>
+                  <p className="text-slate-300 text-sm font-light leading-relaxed mb-4">
+                    {member.bio}
+                  </p>
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-emerald-400 transition-colors"
+                    aria-label={`${member.name} on LinkedIn`}
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 11 0-4.124 2.062 2.062 0 010 4.124zM7.119 20.452H3.554V9h3.565v11.452z" />
+                    </svg>
+                    LinkedIn
+                  </a>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
