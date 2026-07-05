@@ -82,3 +82,10 @@ html {
   background-color: rgba(16, 185, 129, 0.3);
   color: #ffffff;
 }
+
+/* When a product page's sticky bottom bar is visible (body class set by
+   ProductDetailStickyBar), lift the floating WhatsApp button above it so the
+   two never overlap. Offset = bar height (~72px) + the usual 1.5rem gap. */
+body.has-sticky-bar .floating-whatsapp {
+  bottom: calc(72px + 1.5rem);
+}

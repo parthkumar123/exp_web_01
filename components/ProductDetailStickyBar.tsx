@@ -18,6 +18,13 @@ export default function ProductDetailStickyBar({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Signal fixed-bottom elements (the floating WhatsApp button) to move up
+  // out of the bar's way — see the body.has-sticky-bar rule in globals.css.
+  useEffect(() => {
+    document.body.classList.toggle("has-sticky-bar", visible);
+    return () => document.body.classList.remove("has-sticky-bar");
+  }, [visible]);
+
   if (!visible) return null;
 
   return (

@@ -237,10 +237,23 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-white/50">
-              © {currentYear} Senso Agrotech Private Limited. All rights
-              reserved.
-            </p>
+            <div className="text-center md:text-left">
+              <p className="text-sm text-white/50">
+                © {currentYear} Senso Agrotech Private Limited. All rights
+                reserved.
+              </p>
+              <p className="mt-1.5 text-xs text-white/35">
+                Designed & developed by{" "}
+                <a
+                  href="https://vanceiq.com"
+                  target="_blank"
+                  rel="noopener sponsored"
+                  className="text-white/55 font-medium hover:text-emerald-400 transition-colors duration-300"
+                >
+                  VanceIQ
+                </a>
+              </p>
+            </div>
             <div className="flex gap-6 text-sm text-white/50">
               <a
                 href="/privacy"
@@ -262,18 +275,6 @@ export default function Footer() {
               </a>
             </div>
           </div>
-
-          <p className="mt-4 text-center text-xs text-white/40">
-            Designed, developed &amp; marketed by{" "}
-            <a
-              href="https://vanceiq.com"
-              target="_blank"
-              rel="noopener sponsored"
-              className="text-white/60 hover:text-emerald-400 transition-colors duration-300"
-            >
-              VanceIQ
-            </a>
-          </p>
         </div>
       </div>
 
