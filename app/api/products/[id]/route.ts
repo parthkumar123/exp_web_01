@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
+import Admin from "@/models/Admin";
 import { revalidateProductPaths } from "@/lib/revalidate";
 import { submitProductToIndexNow } from "@/lib/indexnow";
 import { getSession } from "@/lib/auth";
@@ -55,6 +56,17 @@ export async function PUT(
 
     const body = await request.json();
     const { id } = await params;
+
+    // Attribution is stamped server-side — client-sent values are ignored.
+    // Prefer the editable console display name over the Google-token name.
+    delete body.createdBy;
+    const adminDoc = await Admin.findOne({ email: session.email })
+      .select("name")
+      .lean();
+    body.updatedBy = {
+      name: adminDoc?.name || session.name || undefined,
+      email: session.email,
+    };
 
     const product = await Product.findByIdAndUpdate(id, body, {
       new: true,

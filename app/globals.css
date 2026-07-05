@@ -19,6 +19,42 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Senso Console (admin) design tokens.
+   The public site is dark emerald glass; the admin is a flat, light console
+   with deep emerald as the single primary. Exposed as Tailwind utilities:
+   bg-admin-bg, bg-admin-surface, border-admin-border, text-admin-ink,
+   bg-admin-primary, … Used only inside the `.admin-ui` tree.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-admin-bg: #f4f6f5; /* app canvas — grey with a faint green cast */
+  --color-admin-surface: #ffffff; /* sidebar, cards, tables, modals */
+  --color-admin-border: #e2e8e5; /* card/table borders */
+  --color-admin-hover: #eef2f0; /* row/nav hover */
+  --color-admin-primary: #065f46; /* active nav, primary buttons, focus */
+  --color-admin-primary-hover: #054e3a;
+  --color-admin-ink: #111827; /* headings */
+  --color-admin-body: #4b5563; /* body text */
+  --color-admin-muted: #6b7280; /* secondary text */
+  --color-admin-faint: #9ca3af; /* placeholders, meta */
+}
+
+/* The admin tree is light-mode regardless of the public site's dark theme. */
+.admin-ui {
+  background: var(--color-admin-bg);
+  color: var(--color-admin-ink);
+  min-height: 100vh;
+}
+/* The body itself is dark for the public site; on admin routes match it to the
+   console so rubber-band overscroll doesn't flash a black block. */
+body:has(.admin-ui) {
+  background: var(--color-admin-bg);
+}
+.admin-ui ::selection {
+  background-color: rgba(6, 95, 70, 0.15);
+  color: inherit;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -33,6 +69,17 @@ body {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Tailwind v4 preflight sets `cursor: default` on buttons; restore the
+   conventional pointer for enabled interactive controls, site-wide. */
+button:not(:disabled),
+[role="button"]:not(:disabled),
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+input[type="file"]:not(:disabled),
+select:not(:disabled) {
+  cursor: pointer;
 }
 
 @keyframes shine {

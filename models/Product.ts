@@ -40,6 +40,9 @@ export interface IProduct {
   currency: string;
   isActive: boolean;
   isFeatured: boolean;
+  /** Admin attribution — set server-side from the session on create/update. */
+  createdBy?: { name?: string; email?: string };
+  updatedBy?: { name?: string; email?: string };
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -168,6 +171,15 @@ const ProductSchema = new Schema<IProduct>(
     isFeatured: {
       type: Boolean,
       default: false,
+    },
+    // Admin attribution — written by the API routes, never by client payloads.
+    createdBy: {
+      name: { type: String, trim: true },
+      email: { type: String, trim: true, lowercase: true },
+    },
+    updatedBy: {
+      name: { type: String, trim: true },
+      email: { type: String, trim: true, lowercase: true },
     },
   },
   {

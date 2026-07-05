@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { SITE_URL } from "@/lib/seo";
 import { getProductSlugs, getProductSlugsByType } from "@/lib/products";
 import { submitUrlsToIndexNow } from "@/lib/indexnow";
+import { getSession } from "@/lib/auth";
 
 // Reads the DB + makes an outbound request, so it must never be statically cached.
 export const dynamic = "force-dynamic";
@@ -11,11 +12,14 @@ export const dynamic = "force-dynamic";
  * the XML sitemap). Useful as a one-off seed at launch or after a large import;
  * routine create/update/delete pings happen automatically in the product routes.
  *
- * Guarded by ADMIN_PASSWORD (the only server-side secret this app has). Provide
- * it as `Authorization: Bearer <password>`, an `x-admin-password` header, or a
- * `?secret=` query param.
+ * Authorized by an admin session (the console's Indexing page) or, for
+ * headless/CI use, the legacy ADMIN_PASSWORD secret via `Authorization:
+ * Bearer <password>`, an `x-admin-password` header, or a `?secret=` param.
  */
-function isAuthorized(request: NextRequest): boolean {
+async function isAuthorized(request: NextRequest): Promise<boolean> {
+  const session = await getSession();
+  if (session) return true;
+
   const adminPassword = process.env.ADMIN_PASSWORD;
   if (!adminPassword) return false;
 
@@ -46,7 +50,7 @@ const STATIC_PATHS = [
 ];
 
 export async function POST(request: NextRequest) {
-  if (!isAuthorized(request)) {
+  if (!(await isAuthorized(request))) {
     return NextResponse.json(
       { success: false, error: "Unauthorized" },
       { status: 401 }

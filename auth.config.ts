@@ -35,7 +35,7 @@ export const authConfig = {
       if (isOnLogin) {
         // Already signed in → bounce away from the login page.
         if (isLoggedIn) {
-          return Response.redirect(new URL("/admin", nextUrl));
+          return Response.redirect(new URL("/admin/dashboard", nextUrl));
         }
         return true;
       }

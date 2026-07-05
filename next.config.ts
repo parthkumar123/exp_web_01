@@ -9,7 +9,8 @@ const CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: https://res.cloudinary.com https://images.unsplash.com https://*.google-analytics.com https://www.googletagmanager.com",
+  // lh3.googleusercontent.com — Google account avatars shown in the admin console.
+  "img-src 'self' data: https://res.cloudinary.com https://images.unsplash.com https://lh3.googleusercontent.com https://*.google-analytics.com https://www.googletagmanager.com",
   "media-src 'self'",
   "font-src 'self'",
   "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com",

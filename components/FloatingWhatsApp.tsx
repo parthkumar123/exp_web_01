@@ -1,12 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { companyInfo } from "@/lib/companyData";
 
 const WHATSAPP_NUMBER = companyInfo.contact.whatsapp.replace(/\D/g, "");
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello, I would like to know more about your products.")}`;
 
 export default function FloatingWhatsApp() {
+  const pathname = usePathname();
+
+  // Customer-facing CTA — keep it off the admin console.
+  if (pathname.startsWith("/admin")) return null;
+
   return (
     <Link
       href={WHATSAPP_URL}

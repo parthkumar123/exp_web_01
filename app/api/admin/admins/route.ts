@@ -24,7 +24,8 @@ export async function GET() {
   });
 }
 
-// Add an admin to the allowlist (superadmin only).
+// Upsert an admin on the allowlist (superadmin only): adds a new email or
+// updates the role/name of an existing one. You can't change your own role.
 export async function POST(request: NextRequest) {
   const session = await getSession();
   if (!session) {
@@ -42,6 +43,7 @@ export async function POST(request: NextRequest) {
     .trim()
     .toLowerCase();
   const role = body?.role === "superadmin" ? "superadmin" : "admin";
+  const name = typeof body?.name === "string" ? body.name.trim() : "";
 
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
     return NextResponse.json(
@@ -52,25 +54,29 @@ export async function POST(request: NextRequest) {
 
   try {
     await connectDB();
+
     const existing = await Admin.findOne({ email });
     if (existing) {
-      return NextResponse.json(
-        { error: "That email is already an admin" },
-        { status: 409 }
-      );
+      if (existing.email === session.email && existing.role !== role) {
+        return NextResponse.json(
+          { error: "You can't change your own role" },
+          { status: 400 }
+        );
+      }
+      existing.role = role;
+      if (name) existing.name = name;
+      await existing.save();
+      return NextResponse.json({ success: true, admin: existing, updated: true });
     }
 
-    const admin = await Admin.create({ email, role });
-    return NextResponse.json({ success: true, admin }, { status: 201 });
+    const admin = await Admin.create({ email, role, ...(name ? { name } : {}) });
+    return NextResponse.json(
+      { success: true, admin, updated: false },
+      { status: 201 }
+    );
   } catch (error) {
-    if ((error as { code?: number }).code === 11000) {
-      return NextResponse.json(
-        { error: "That email is already an admin" },
-        { status: 409 }
-      );
-    }
-    console.error("Add admin error:", error);
-    return NextResponse.json({ error: "Failed to add admin" }, { status: 500 });
+    console.error("Upsert admin error:", error);
+    return NextResponse.json({ error: "Failed to save admin" }, { status: 500 });
   }
 }
 

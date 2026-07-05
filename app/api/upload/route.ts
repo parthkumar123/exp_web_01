@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import cloudinary from "@/lib/cloudinary";
+import { getCloudinary } from "@/lib/cloudinary";
 import { getSession } from "@/lib/auth";
 
 // Upload product images to Cloudinary (authenticated admins only).
@@ -29,7 +29,8 @@ export async function POST(request: NextRequest) {
     const base64 = buffer.toString("base64");
     const dataURI = `data:${file.type};base64,${base64}`;
 
-    // Upload to Cloudinary
+    // Upload to Cloudinary (config resolved from Apps settings / env fallback)
+    const cloudinary = await getCloudinary();
     const result = await cloudinary.uploader.upload(dataURI, {
       folder: "senso-products", // Organize uploads in a folder
       resource_type: "auto",

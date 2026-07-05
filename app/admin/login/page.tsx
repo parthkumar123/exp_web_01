@@ -1,9 +1,9 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import Navigation from "@/components/Navigation";
 
 function LoginContent() {
   const [loading, setLoading] = useState(false);
@@ -20,40 +20,44 @@ function LoginContent() {
 
   const handleGoogleSignIn = () => {
     setLoading(true);
-    signIn("google", { redirectTo: "/admin" });
+    signIn("google", { redirectTo: "/admin/dashboard" });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-emerald-900/30 to-zinc-900">
-      <Navigation />
+    <div className="relative flex min-h-screen items-center justify-center bg-admin-bg px-4">
+      {/* Subtle brand tint behind the card — unmistakably Senso, still calm. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(600px 320px at 50% 30%, rgba(6, 95, 70, 0.07), transparent 70%)",
+        }}
+      />
 
-      <div className="min-h-screen flex items-center justify-center px-4 pt-20">
-        <div className="max-w-md w-full">
-          <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 to-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 shadow-2xl">
-            <div className="text-center mb-8">
-              <div className="inline-block p-4 bg-emerald-500/20 rounded-full mb-4">
-                <svg
-                  className="w-12 h-12 text-emerald-400"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <h1 className="text-3xl font-light text-white mb-2">
-                Admin Login
+      <div className="relative w-full max-w-md">
+        <div className="overflow-hidden rounded-2xl border border-admin-border bg-admin-surface shadow-sm">
+          {/* Thin emerald brand bar */}
+          <div className="h-1 w-full bg-admin-primary" />
+
+          <div className="p-8">
+            <div className="mb-8 text-center">
+              <Image
+                src="/logo.png"
+                alt="Senso Agrotech"
+                width={56}
+                height={56}
+                className="mx-auto mb-4 h-14 w-14 rounded-xl object-contain"
+                priority
+              />
+              <h1 className="text-xl font-semibold text-admin-ink">
+                Sign in to Senso Admin Console
               </h1>
-              <p className="text-white/60">
-                Sign in with an authorized Google account
-              </p>
+              <p className="mt-1 text-sm text-admin-muted">Authorized accounts only.</p>
             </div>
 
             {errorMessage && (
-              <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-sm">
+              <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-3.5 text-sm text-red-700">
                 {errorMessage}
               </div>
             )}
@@ -62,9 +66,9 @@ function LoginContent() {
               type="button"
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white text-zinc-800 font-semibold rounded-lg hover:bg-zinc-100 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex w-full items-center justify-center gap-3 rounded-lg border border-admin-border bg-white px-6 py-2.5 text-sm font-medium text-admin-ink transition-colors hover:bg-admin-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"
@@ -86,6 +90,10 @@ function LoginContent() {
             </button>
           </div>
         </div>
+
+        <p className="mt-6 text-center text-xs text-admin-faint">
+          © {new Date().getFullYear()} Senso Agrotech Private Limited
+        </p>
       </div>
     </div>
   );

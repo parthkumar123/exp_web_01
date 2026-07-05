@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
+import Admin from "@/models/Admin";
 import { revalidateProductPaths } from "@/lib/revalidate";
 import { submitProductToIndexNow } from "@/lib/indexnow";
 import { getSession } from "@/lib/auth";
@@ -87,6 +88,18 @@ export async function POST(request: NextRequest) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
     }
+
+    // Attribution is stamped server-side — client-sent values are ignored.
+    // Prefer the editable console display name over the Google-token name.
+    const adminDoc = await Admin.findOne({ email: session.email })
+      .select("name")
+      .lean();
+    const actor = {
+      name: adminDoc?.name || session.name || undefined,
+      email: session.email,
+    };
+    body.createdBy = actor;
+    body.updatedBy = actor;
 
     const product = await Product.create(body);
 
