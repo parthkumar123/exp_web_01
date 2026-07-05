@@ -305,6 +305,12 @@ function AdminPanelContent() {
               >
                 View All Products
               </Link>
+              <Link
+                href="/admin/admins"
+                className="px-6 py-3 bg-white/10 text-white/90 font-semibold rounded-xl hover:bg-white/20 border border-emerald-500/30 transition-all duration-300"
+              >
+                Admins
+              </Link>
               <button
                 onClick={logout}
                 className="px-6 py-3 bg-red-500/20 text-red-300 font-semibold rounded-xl hover:bg-red-500/30 border border-red-500/30 transition-all duration-300"

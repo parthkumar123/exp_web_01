@@ -3,6 +3,7 @@ import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { revalidateProductPaths } from "@/lib/revalidate";
 import { submitProductToIndexNow } from "@/lib/indexnow";
+import { getSession } from "@/lib/auth";
 
 // GET all products or filter by category
 export async function GET(request: NextRequest) {
@@ -17,8 +18,15 @@ export async function GET(request: NextRequest) {
 
     const query: Record<string, string | boolean> = {};
 
-    // Only filter by isActive if not explicitly requesting inactive products
-    if (includeInactive !== "true") {
+    // Only filter by isActive if not explicitly requesting inactive products.
+    // Inactive (unpublished) products are admin-only — never leak them to
+    // unauthenticated callers.
+    if (includeInactive === "true") {
+      const session = await getSession();
+      if (!session) {
+        query.isActive = true;
+      }
+    } else {
       query.isActive = true;
     }
 
@@ -57,9 +65,17 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Create new product
+// POST - Create new product (authenticated admins only)
 export async function POST(request: NextRequest) {
   try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     await connectDB();
 
     const body = await request.json();

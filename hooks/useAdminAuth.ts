@@ -1,29 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
+/**
+ * Admin session helper for client components.
+ *
+ * Route protection is handled server-side by `middleware.ts` (Auth.js session
+ * cookie) — no client-side redirect logic is needed anymore. This hook only
+ * exposes `logout`, keeping the API the admin pages already use.
+ */
 export function useAdminAuth() {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  useEffect(() => {
-    // Skip auth check for login page
-    if (pathname === "/admin/login") {
-      return;
-    }
-
-    // Check if user is authenticated
-    const token = localStorage.getItem("adminAuth");
-
-    if (!token) {
-      router.push("/admin/login");
-    }
-  }, [pathname, router]);
-
   const logout = () => {
-    localStorage.removeItem("adminAuth");
-    router.push("/admin/login");
+    signOut({ redirectTo: "/admin/login" });
   };
 
   return { logout };

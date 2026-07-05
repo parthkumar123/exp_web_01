@@ -3,6 +3,7 @@ import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { revalidateProductPaths } from "@/lib/revalidate";
 import { submitProductToIndexNow } from "@/lib/indexnow";
+import { getSession } from "@/lib/auth";
 
 // GET single product by ID
 export async function GET(
@@ -36,12 +37,20 @@ export async function GET(
   }
 }
 
-// PUT - Update product
+// PUT - Update product (authenticated admins only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     await connectDB();
 
     const body = await request.json();
@@ -77,12 +86,20 @@ export async function PUT(
   }
 }
 
-// DELETE - Delete product
+// DELETE - Delete product (authenticated admins only)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     await connectDB();
 
     const { id } = await params;
