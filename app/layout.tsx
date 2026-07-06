@@ -1,18 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import CookieConsent from "@/components/CookieConsent";
 import { SITE_URL } from "@/lib/seo";
 
-// Google Analytics 4 measurement id (e.g. "G-XXXXXXXXXX") and Google Search
-// Console verification token. Both are injected only when the env var is set,
-// so local/dev builds stay clean. See .env.example.
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+// Google Search Console verification token — injected only when the env var
+// is set, so local/dev builds stay clean. See .env.example. Analytics (GA4 +
+// Clarity) live in <CookieConsent /> behind a GDPR consent gate.
 const GSC_VERIFICATION = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
-// Microsoft Clarity project id (e.g. "xi1l9cjx71") — heatmaps + session
-// recordings, surfaced via Bing Webmaster Tools. See .env.example.
-const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -94,29 +90,7 @@ export default function RootLayout({
       >
         {children}
         <FloatingWhatsApp />
-        {GA_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga4-init" strategy="afterInteractive">
-              {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GA_ID}');`}
-            </Script>
-          </>
-        )}
-        {CLARITY_ID && (
-          <Script id="clarity-init" strategy="afterInteractive">
-            {`(function(c,l,a,r,i,t,y){
-    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-})(window, document, "clarity", "script", "${CLARITY_ID}");`}
-          </Script>
-        )}
+        <CookieConsent />
       </body>
     </html>
   );

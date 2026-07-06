@@ -33,7 +33,7 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
           <p className="text-lg text-white/70 max-w-2xl mx-auto font-light">
-            Last updated: February 2025
+            Last updated: July 2026
           </p>
         </div>
       </section>
@@ -121,7 +121,55 @@ export default function PrivacyPage() {
 
             <div>
               <h2 className="text-xl font-semibold text-white mb-3">
-                6. Your Rights
+                6. Analytics
+              </h2>
+              <p className="mb-3">
+                We use Google Analytics to understand how visitors find and use
+                our website, such as pages visited, time on site, and
+                approximate location. For more information, see the{" "}
+                <a
+                  href="https://policies.google.com/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  Google Privacy Policy
+                </a>
+                .
+              </p>
+              <p>
+                We also partner with Microsoft Clarity to capture how you use
+                and interact with our website through behavioural metrics,
+                heatmaps, and session replay to improve our products and
+                services. Website usage data is captured using first and
+                third-party cookies and other tracking technologies to
+                determine the popularity of products and online activity, and
+                is additionally used for site optimisation and fraud/security
+                purposes. For more information about how Microsoft collects and
+                uses your data, visit the{" "}
+                <a
+                  href="https://www.microsoft.com/privacy/privacystatement"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  Microsoft Privacy Statement
+                </a>
+                .
+              </p>
+              <p className="mt-3">
+                These analytics tools are loaded only after you accept them via
+                the cookie consent banner shown on your first visit. If you
+                decline, no analytics data is collected. You can withdraw or
+                change your choice at any time by clearing this site&apos;s
+                data in your browser settings, after which the banner will ask
+                again.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-3">
+                7. Your Rights
               </h2>
               <p>
                 Depending on applicable law, you may have the right to access,
@@ -134,7 +182,7 @@ export default function PrivacyPage() {
 
             <div>
               <h2 className="text-xl font-semibold text-white mb-3">
-                7. Retention
+                8. Retention
               </h2>
               <p>
                 We retain your personal information only for as long as
@@ -145,7 +193,7 @@ export default function PrivacyPage() {
 
             <div>
               <h2 className="text-xl font-semibold text-white mb-3">
-                8. Changes to This Policy
+                9. Changes to This Policy
               </h2>
               <p>
                 We may update this Privacy Policy from time to time. The
