@@ -10,6 +10,9 @@ import { SITE_URL } from "@/lib/seo";
 // so local/dev builds stay clean. See .env.example.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const GSC_VERIFICATION = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
+// Microsoft Clarity project id (e.g. "xi1l9cjx71") — heatmaps + session
+// recordings, surfaced via Bing Webmaster Tools. See .env.example.
+const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -104,6 +107,15 @@ gtag('js', new Date());
 gtag('config', '${GA_ID}');`}
             </Script>
           </>
+        )}
+        {CLARITY_ID && (
+          <Script id="clarity-init" strategy="afterInteractive">
+            {`(function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "${CLARITY_ID}");`}
+          </Script>
         )}
       </body>
     </html>

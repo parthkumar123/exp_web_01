@@ -7,13 +7,14 @@ import type { NextConfig } from "next";
 // narrowest possible allowance here and note why.
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+  // www.clarity.ms — Microsoft Clarity heatmaps/session recording (Bing Webmaster Tools).
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.clarity.ms",
   "style-src 'self' 'unsafe-inline'",
   // lh3.googleusercontent.com — Google account avatars shown in the admin console.
   "img-src 'self' data: https://res.cloudinary.com https://images.unsplash.com https://lh3.googleusercontent.com https://*.google-analytics.com https://www.googletagmanager.com",
   "media-src 'self'",
   "font-src 'self'",
-  "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com",
+  "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
